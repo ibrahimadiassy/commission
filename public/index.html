@@ -1,0 +1,2123 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#842d50">
+    <meta name="description"
+        content="Espace de gestion de la Commission Trésorerie et Capacitation (CTC) de la Section UIDT-EPT, DMWM.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <title>Commission Trésorerie et Capacitation (CTC) — UIDT-EPT</title>
+    <style>
+        :root {
+            --bg: #f8f6f2;
+            --card: #fffefd;
+            --ink: #2a2024;
+            --mut: #75696d;
+            --line: #ece5e5;
+            --ac: #842d50;
+            --ac-soft: #f7eaf0;
+            --gold: #bd872d;
+            --gold-soft: #fbf2df;
+            --on: #fff;
+            --bad: #ad423d;
+            --ok: #28734f;
+            --shadow: 0 8px 28px rgba(58, 35, 43, .07);
+            box-sizing: border-box;
+            color-scheme: light;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        @media(prefers-color-scheme:dark) {
+            :root:not([data-theme="light"]):not([data-theme="dark"]) {
+                --bg: #171316;
+                --card: #221b20;
+                --ink: #f4edf0;
+                --mut: #b8a8af;
+                --line: #3a2d34;
+                --ac: #e18aac;
+                --ac-soft: #38232e;
+                --gold: #e5bc69;
+                --gold-soft: #382e1e;
+                --on: #25171e;
+                --bad: #ef9990;
+                --ok: #81d1a2;
+                --shadow: 0 8px 28px rgba(0, 0, 0, .23);
+                color-scheme: dark
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #171316;
+            --card: #221b20;
+            --ink: #f4edf0;
+            --mut: #b8a8af;
+            --line: #3a2d34;
+            --ac: #e18aac;
+            --ac-soft: #38232e;
+            --gold: #e5bc69;
+            --gold-soft: #382e1e;
+            --on: #25171e;
+            --bad: #ef9990;
+            --ok: #81d1a2;
+            --shadow: 0 8px 28px rgba(0, 0, 0, .23);
+            color-scheme: dark
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-padding-top: 16px
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 15px/1.6 "Source Sans 3", "Segoe UI", Inter, system-ui, -apple-system, sans-serif
+        }
+
+        header {
+            padding: 18px 24px;
+            max-width: 1200px;
+            margin: 18px auto 0
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            padding: 14px 18px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: linear-gradient(112deg, var(--card), var(--gold-soft) 64%, var(--ac-soft));
+            box-shadow: var(--shadow)
+        }
+
+        .brand-lockup {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 0;
+            color: inherit;
+            text-decoration: none
+        }
+
+        .brand-logo {
+            display: block;
+            width: 158px;
+            height: auto;
+            flex: 0 0 auto;
+            filter: drop-shadow(0 3px 6px rgba(97, 53, 64, .1))
+        }
+
+        .brand-copy {
+            min-width: 0
+        }
+
+        .brand-copy>small {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 0;
+            font-weight: 450;
+            color: var(--mut);
+            margin-top: 3px;
+            line-height: 1.45
+        }
+
+        h1 {
+            font-size: 19px;
+            letter-spacing: -.035em;
+            font-weight: 760;
+            margin: 0
+        }
+
+        ::selection {
+            background: var(--ac);
+            color: var(--on)
+        }
+
+        nav {
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 24px;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            scrollbar-width: thin
+        }
+
+        nav[hidden] {
+            display: none
+        }
+
+        nav button {
+            background: none;
+            border: 0;
+            border-radius: 8px;
+            padding: 8px 13px;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 650;
+            color: var(--mut);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .15s, color .15s
+        }
+
+        nav button:hover {
+            background: var(--ac-soft);
+            color: var(--ac)
+        }
+
+        nav button.on {
+            background: var(--ac);
+            color: var(--on)
+        }
+
+        main {
+            max-width: 1200px;
+            margin: auto;
+            padding: 26px 24px 52px
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow)
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(205px, 1fr));
+            gap: 15px;
+            margin-bottom: 18px
+        }
+
+        .grid .card {
+            position: relative;
+            overflow: hidden;
+            margin: 0;
+            padding: 20px 21px
+        }
+
+        .grid .card>* {
+            position: relative;
+            z-index: 1
+        }
+
+        .grid .card:after {
+            content: "";
+            position: absolute;
+            right: -20px;
+            top: -30px;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: var(--ac-soft);
+            opacity: .8
+        }
+
+        .k {
+            font-size: 13px;
+            color: var(--mut)
+        }
+
+        .v {
+            font-size: 25px;
+            font-weight: 750;
+            letter-spacing: -.035em;
+            margin-top: 8px
+        }
+
+        .ok {
+            color: var(--ok)
+        }
+
+        .bad {
+            color: var(--bad)
+        }
+
+        .sc {
+            overflow-x: auto
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 520px
+        }
+
+        .annual-fields {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(125px, 1fr));
+            gap: 8px;
+            align-items: end;
+            min-width: 230px
+        }
+
+        .annual-fields input {
+            width: 100%
+        }
+
+        .annual-fields button {
+            align-self: end
+        }
+
+        .report-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 16px 0 6px
+        }
+
+        .export-group {
+            border-top: 1px solid var(--line);
+            margin-top: 20px;
+            padding-top: 16px
+        }
+
+        .export-group h3 {
+            margin: 0 0 10px;
+            font-size: 14px
+        }
+
+        .export-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px
+        }
+
+        .member-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 10px
+        }
+
+        .member-preview article {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--bg)
+        }
+
+        .member-preview strong {
+            display: block
+        }
+
+        .member-preview .hint {
+            display: block
+        }
+
+        .member-summary {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap
+        }
+
+        .member-summary .v {
+            margin: 0
+        }
+
+        .member-profile {
+            width: min(760px, calc(100vw - 28px));
+            max-width: 760px;
+            max-height: min(85vh, 850px);
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--card);
+            color: var(--ink);
+            padding: 24px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, .24)
+        }
+
+        .password-dialog {
+            width: min(440px, calc(100vw - 28px));
+            max-width: 440px
+        }
+
+        .password-dialog form {
+            display: grid;
+            gap: 14px;
+            align-items: stretch;
+            margin: 18px 0 0
+        }
+
+        .password-dialog label,
+        .password-dialog input {
+            width: 100%
+        }
+
+        .password-dialog .dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 4px
+        }
+
+        .member-profile::backdrop {
+            background: rgba(15, 28, 20, .62);
+            backdrop-filter: blur(3px)
+        }
+
+        .profile-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px
+        }
+
+        .profile-avatar {
+            display: grid;
+            place-items: center;
+            flex: 0 0 48px;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: var(--ac-soft);
+            color: var(--ac);
+            font-weight: 800;
+            font-size: 19px
+        }
+
+        .profile-heading {
+            display: flex;
+            align-items: center;
+            gap: 13px
+        }
+
+        .profile-section {
+            margin-top: 22px
+        }
+
+        .profile-section h3 {
+            margin: 0 0 10px;
+            font-size: 14px
+        }
+
+        .profile-kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+            gap: 10px
+        }
+
+        .profile-kpi {
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 10px
+        }
+
+        .profile-kpi strong {
+            display: block;
+            font-size: 16px;
+            margin-top: 3px
+        }
+
+        .member-search {
+            margin: 12px 0 16px
+        }
+
+        .member-search input {
+            width: min(100%, 420px)
+        }
+
+        .guide {
+            background: var(--ac-soft);
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin: 14px 0
+        }
+
+        .guide h3 {
+            margin: 0 0 8px;
+            font-size: 14px
+        }
+
+        .guide ol,
+        .guide ul {
+            margin: 6px 0 0;
+            padding-left: 22px
+        }
+
+        .guide li+li {
+            margin-top: 5px
+        }
+
+        .guide .hint {
+            display: block;
+            margin-top: 8px
+        }
+
+        .requirements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0
+        }
+
+        .requirements span {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 12px;
+            color: var(--mut)
+        }
+
+        th,
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: middle
+        }
+
+        th {
+            font-size: 12px;
+            color: var(--mut);
+            font-weight: 650;
+            letter-spacing: .025em
+        }
+
+        td.n,
+        th.n {
+            text-align: right;
+            font-variant-numeric: tabular-nums
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 18px
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--mut);
+            gap: 6px
+        }
+
+        label:has([required]) {
+            position: relative;
+            padding-right: 12px
+        }
+
+        label:has([required]) .req {
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: var(--bad)
+        }
+
+        .hint,
+        .field-key {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--mut);
+            line-height: 1.45
+        }
+
+        .field-key {
+            flex-basis: 100%;
+            margin: 0
+        }
+
+        .field-key .req {
+            position: static;
+            color: var(--bad);
+            font-weight: 700
+        }
+
+        input,
+        select {
+            font: inherit;
+            color: var(--ink);
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 10px 12px;
+            min-width: 0;
+            transition: border-color .15s, box-shadow .15s
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--ac);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--ac) 14%, transparent);
+            outline: 0
+        }
+
+        input[type=number] {
+            width: 145px
+        }
+
+        input[type=checkbox] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--ac)
+        }
+
+        button {
+            transition: filter .15s, transform .15s
+        }
+
+        button:hover {
+            filter: brightness(.96)
+        }
+
+        button:active {
+            transform: translateY(1px)
+        }
+
+        button:disabled {
+            opacity: .65;
+            cursor: wait
+        }
+
+        button.b {
+            font: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            background: var(--ac);
+            color: var(--on);
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer
+        }
+
+        button.g {
+            background: var(--card);
+            border: 1px solid var(--line);
+            color: var(--ink);
+            border-radius: 8px;
+            padding: 7px 11px;
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer
+        }
+
+        button.x {
+            background: none;
+            border: 0;
+            color: var(--bad);
+            cursor: pointer;
+            font: inherit;
+            font-size: 13px
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--ac);
+            outline-offset: 3px
+        }
+
+        details>summary {
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            list-style: none
+        }
+
+        details>summary::-webkit-details-marker {
+            display: none
+        }
+
+        details>summary:after {
+            content: "+";
+            color: var(--ac);
+            font-size: 18px;
+            line-height: 1
+        }
+
+        details[open]>summary:after {
+            content: "−"
+        }
+
+        .bar {
+            height: 8px;
+            background: var(--line);
+            border-radius: 8px;
+            min-width: 60px;
+            overflow: hidden
+        }
+
+        .bar i {
+            display: block;
+            height: 100%;
+            background: var(--ac);
+            border-radius: 8px
+        }
+
+        .ro form,
+        .ro .x,
+        .ro [data-a=full],
+        .ro [data-writer-only] {
+            display: none
+        }
+
+        .ro td input {
+            pointer-events: none;
+            opacity: .6
+        }
+
+        .lg {
+            max-width: 430px;
+            margin: 8vh auto
+        }
+
+        .lg h2 {
+            font-size: 22px
+        }
+
+        .lg .k {
+            margin-top: 5px
+        }
+
+        .welcome {
+            background: linear-gradient(120deg, var(--card), var(--ac-soft));
+            border-top: 3px solid var(--gold)
+        }
+
+        .landing-shell {
+            width: min(1120px, 100%);
+            margin: 0 auto;
+            padding: 10px 4px 48px
+        }
+
+        .landing-nav {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            justify-content: center;
+            gap: 8px;
+            max-width: none;
+            padding: 10px 18px;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            background: color-mix(in srgb, var(--bg) 92%, transparent);
+            backdrop-filter: blur(14px)
+        }
+
+        .landing-nav a {
+            padding: 7px 12px;
+            border-radius: 8px;
+            color: var(--mut);
+            font-size: 13px;
+            font-weight: 650;
+            text-decoration: none;
+            white-space: nowrap
+        }
+
+        .landing-nav a:hover,
+        .landing-nav a:focus-visible {
+            background: var(--ac-soft);
+            color: var(--ac)
+        }
+
+        .landing-hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(340px, .78fr);
+            align-items: center;
+            gap: clamp(28px, 6vw, 76px);
+            padding: clamp(32px, 6vw, 76px) 0
+        }
+
+        .landing-intro {
+            position: relative;
+            padding: 0
+        }
+
+        .landing-intro h2 {
+            max-width: 620px;
+            margin: 17px 0 15px;
+            font-size: clamp(38px, 5.3vw, 64px);
+            line-height: 1.02;
+            letter-spacing: -.05em;
+            font-weight: 800
+        }
+
+        .landing-lead {
+            max-width: 570px;
+            margin: 0;
+            color: var(--mut);
+            font-size: 18px;
+            line-height: 1.65
+        }
+
+        .landing-hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 25px 0 22px
+        }
+
+        .landing-hero-actions a {
+            text-decoration: none
+        }
+
+        .landing-hero-actions a.b,
+        .landing-access a.b {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: var(--ac);
+            color: var(--on);
+            padding: 10px 15px;
+            font-size: 13px;
+            font-weight: 700
+        }
+
+        .landing-hero-actions a.g {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--ink);
+            padding: 9px 14px;
+            font-size: 13px;
+            font-weight: 650
+        }
+
+        .landing-identity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--mut);
+            font-size: 12px
+        }
+
+        .landing-identity:before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 0 4px var(--gold-soft)
+        }
+
+        .landing-shell section[id] {
+            scroll-margin-top: 76px
+        }
+
+        .landing-auth {
+            grid-column: auto
+        }
+
+        .landing-section {
+            padding: 54px 0;
+            border-top: 1px solid var(--line)
+        }
+
+        .landing-section-heading {
+            max-width: 660px;
+            margin: 0 auto 26px;
+            text-align: center
+        }
+
+        .landing-section-heading .landing-eyebrow {
+            justify-content: center
+        }
+
+        .landing-section-heading h2 {
+            margin: 10px 0 8px;
+            font-size: clamp(26px, 3.4vw, 38px);
+            line-height: 1.12;
+            letter-spacing: -.035em
+        }
+
+        .landing-section-heading p {
+            margin: 0;
+            color: var(--mut);
+            font-size: 15px
+        }
+
+        .landing-mission-grid,
+        .landing-service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px
+        }
+
+        .landing-mission,
+        .landing-service {
+            min-height: 180px;
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--card);
+            box-shadow: var(--shadow)
+        }
+
+        .landing-mission-number {
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .1em
+        }
+
+        .landing-mission h3,
+        .landing-service h3 {
+            margin: 12px 0 7px;
+            font-size: 17px;
+            line-height: 1.3
+        }
+
+        .landing-mission p,
+        .landing-service p {
+            margin: 0;
+            color: var(--mut);
+            font-size: 13px
+        }
+
+        .landing-service-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr))
+        }
+
+        .landing-service {
+            min-height: 205px;
+            padding: 18px
+        }
+
+        .landing-service .landing-feature-icon {
+            margin-bottom: 17px
+        }
+
+        .landing-steps {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            counter-reset: landing-step
+        }
+
+        .landing-step {
+            position: relative;
+            padding: 4px 18px 4px 54px;
+            counter-increment: landing-step
+        }
+
+        .landing-step:before {
+            content: "0" counter(landing-step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--ac);
+            font-size: 18px;
+            font-weight: 800
+        }
+
+        .landing-step h3 {
+            margin: 0 0 6px;
+            font-size: 15px
+        }
+
+        .landing-step p {
+            margin: 0;
+            color: var(--mut);
+            font-size: 13px
+        }
+
+        .landing-access {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 20px;
+            padding: 25px 28px;
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--gold);
+            border-radius: 14px;
+            background: linear-gradient(110deg, var(--gold-soft), var(--ac-soft))
+        }
+
+        .landing-access h2 {
+            margin: 0 0 4px;
+            font-size: 21px
+        }
+
+        .landing-access p {
+            margin: 0;
+            color: var(--mut);
+            font-size: 13px
+        }
+
+        .landing-access a {
+            text-decoration: none;
+            white-space: nowrap
+        }
+
+        .landing-footer {
+            grid-column: auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding: 22px 0 0;
+            border-top: 1px solid var(--line);
+            color: var(--mut);
+            font-size: 12px
+        }
+
+        .landing-footer p {
+            margin: 3px 0
+        }
+
+        .landing-footer-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap
+        }
+
+        .landing-footer-links a {
+            color: var(--mut);
+            text-decoration: none
+        }
+
+        .landing-footer-links a:hover {
+            color: var(--ac)
+        }
+
+        .landing-intro {
+            position: relative;
+            padding: clamp(20px, 4vw, 48px) 0
+        }
+
+        .landing-eyebrow,
+        .landing-secure {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--ac);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase
+        }
+
+        .landing-eyebrow:before {
+            content: "";
+            width: 24px;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 2px
+        }
+
+        .landing-intro h2 {
+            max-width: 590px;
+            margin: 17px 0 15px;
+            font-size: clamp(34px, 4.4vw, 54px);
+            line-height: 1.04;
+            letter-spacing: -.045em;
+            font-weight: 800
+        }
+
+        .landing-intro h2 span {
+            color: var(--ac)
+        }
+
+        .landing-lead {
+            max-width: 550px;
+            margin: 0;
+            color: var(--mut);
+            font-size: 17px;
+            line-height: 1.65
+        }
+
+        .landing-features {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 11px;
+            margin: 30px 0 24px
+        }
+
+        .landing-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 70px;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: var(--card)
+        }
+
+        .landing-feature-icon {
+            display: grid;
+            place-items: center;
+            flex: 0 0 38px;
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: var(--ac-soft);
+            color: var(--ac)
+        }
+
+        .landing-feature-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.7;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        .landing-feature strong,
+        .landing-feature small {
+            display: block
+        }
+
+        .landing-feature strong {
+            font-size: 13px
+        }
+
+        .landing-feature small {
+            margin-top: 1px;
+            color: var(--mut);
+            font-size: 11px;
+            line-height: 1.35
+        }
+
+        .landing-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            max-width: 560px;
+            padding: 14px 16px;
+            border-left: 3px solid var(--gold);
+            border-radius: 0 10px 10px 0;
+            background: var(--gold-soft);
+            color: var(--mut);
+            font-size: 12px
+        }
+
+        .landing-note strong {
+            color: var(--ink)
+        }
+
+        .landing-auth {
+            width: 100%;
+            margin: 0;
+            padding: clamp(22px, 3vw, 34px);
+            border-top: 3px solid var(--gold);
+            border-radius: 18px
+        }
+
+        .landing-auth h2 {
+            margin: 8px 0 4px;
+            font-size: 25px;
+            letter-spacing: -.03em
+        }
+
+        .landing-auth>p {
+            margin: 0 0 20px;
+            color: var(--mut);
+            font-size: 13px
+        }
+
+        .landing-secure {
+            gap: 7px;
+            color: var(--ok);
+            font-size: 10px;
+            letter-spacing: .08em
+        }
+
+        .landing-secure svg {
+            width: 15px;
+            height: 15px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        .landing-auth form {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 14px;
+            margin: 0
+        }
+
+        .landing-auth form label {
+            gap: 6px;
+            color: var(--ink);
+            font-size: 12px;
+            font-weight: 650
+        }
+
+        .landing-auth form input {
+            width: 100%;
+            padding: 12px 13px;
+            background: var(--bg)
+        }
+
+        .landing-auth form .field-key {
+            padding: 9px 11px;
+            border-radius: 8px;
+            background: var(--ac-soft);
+            color: var(--mut)
+        }
+
+        .landing-auth form button.b {
+            width: 100%;
+            margin-top: 3px;
+            padding: 12px 16px;
+            font-size: 14px
+        }
+
+        .landing-auth .auth-help {
+            margin: 16px 0 0;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+            color: var(--mut);
+            font-size: 11px
+        }
+
+        .landing-footer strong {
+            color: var(--ink)
+        }
+
+        #site-footer {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px
+        }
+
+        #site-footer:empty {
+            display: none
+        }
+
+        .skip-link {
+            position: fixed;
+            top: 8px;
+            left: 8px;
+            z-index: 20;
+            padding: 9px 13px;
+            border-radius: 8px;
+            background: var(--ink);
+            color: var(--card);
+            transform: translateY(-160%);
+            text-decoration: none
+        }
+
+        .skip-link:focus {
+            transform: translateY(0)
+        }
+
+        .em {
+            color: var(--mut);
+            padding: 14px 0
+        }
+
+        h2 {
+            font-size: 17px;
+            letter-spacing: -.02em;
+            margin: 0 0 16px
+        }
+
+        #who {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--card);
+            box-shadow: 0 0 0 1px var(--line);
+            background: var(--ac-soft);
+            flex: 0 0 auto
+        }
+
+        .user-avatar-initials {
+            display: grid;
+            place-items: center;
+            color: var(--ac);
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 9px
+        }
+
+        .user-row .user-avatar {
+            width: 34px;
+            height: 34px
+        }
+
+        .profile-photo-form {
+            display: grid;
+            grid-template-columns: 72px minmax(0, 1fr);
+            align-items: center;
+            gap: 12px
+        }
+
+        .profile-photo-form .user-avatar {
+            width: 72px;
+            height: 72px
+        }
+
+        #who:not(:empty):before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ok)
+        }
+
+        #app>.card:first-child h2 {
+            margin-bottom: 14px
+        }
+
+        #toast {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 10;
+            max-width: min(420px, calc(100vw - 32px));
+            padding: 13px 17px;
+            border-radius: 10px;
+            background: var(--ink);
+            color: var(--card);
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition: opacity .2s, transform .2s
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        #toast.error {
+            background: var(--bad);
+            color: #fff
+        }
+
+        @media(max-width:640px) {
+            header {
+                padding: 12px 12px 14px;
+                margin-top: 8px
+            }
+
+            .top {
+                padding: 12px;
+                border-radius: 14px;
+                gap: 10px
+            }
+
+            .brand-lockup {
+                gap: 10px
+            }
+
+            .brand-logo {
+                width: 98px
+            }
+
+            .brand-copy {
+                max-width: 235px
+            }
+
+            .brand-copy>small {
+                font-size: 9px
+            }
+
+            .top #who {
+                font-size: 11px;
+                gap: 6px;
+                flex-shrink: 0
+            }
+
+            .top #who .g {
+                padding: 6px 8px
+            }
+
+            nav {
+                padding: 9px 16px
+            }
+
+            main {
+                padding: 20px 14px 36px
+            }
+
+            .card {
+                padding: 17px;
+                margin-bottom: 14px
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px
+            }
+
+            .grid .card {
+                padding: 15px
+            }
+
+            .v {
+                font-size: 20px
+            }
+
+            h1 {
+                font-size: 16px
+            }
+
+            form {
+                align-items: stretch
+            }
+
+            form label {
+                flex: 1 1 145px
+            }
+
+            form button.b {
+                align-self: flex-end
+            }
+        }
+
+        @media(max-width:900px) {
+            .landing-hero {
+                grid-template-columns: minmax(0, 1fr) minmax(290px, .9fr);
+                gap: 26px;
+                padding: 44px 0
+            }
+
+            .landing-service-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+        }
+
+        @media(max-width:640px) {
+            .landing-shell {
+                padding: 0 0 30px
+            }
+
+            .landing-nav {
+                justify-content: flex-start;
+                padding: 8px 12px;
+                gap: 2px
+            }
+
+            .landing-nav a {
+                padding: 7px 9px;
+                font-size: 12px
+            }
+
+            .landing-hero {
+                grid-template-columns: 1fr;
+                gap: 22px;
+                padding: 32px 2px
+            }
+
+            .landing-intro h2 {
+                max-width: 520px;
+                margin: 12px 0 10px;
+                font-size: clamp(36px, 10vw, 48px)
+            }
+
+            .landing-lead {
+                font-size: 15px
+            }
+
+            .landing-hero-actions {
+                margin: 19px 0
+            }
+
+            .landing-auth {
+                max-width: 520px;
+                align-self: center
+            }
+
+            .landing-section {
+                padding: 38px 0
+            }
+
+            .landing-section-heading {
+                margin-bottom: 19px
+            }
+
+            .landing-mission-grid,
+            .landing-steps {
+                grid-template-columns: 1fr;
+                gap: 10px
+            }
+
+            .landing-mission {
+                min-height: 0;
+                padding: 17px
+            }
+
+            .landing-service-grid {
+                gap: 10px
+            }
+
+            .landing-service {
+                min-height: 0;
+                padding: 15px
+            }
+
+            .landing-service .landing-feature-icon {
+                margin-bottom: 10px
+            }
+
+            .landing-access {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 14px
+            }
+
+            .landing-access a {
+                justify-self: start
+            }
+
+            .landing-footer {
+                width: 100%;
+                margin-top: 20px;
+                padding-top: 17px
+            }
+        }
+
+        @media(max-width:380px) {
+            .landing-service-grid {
+                grid-template-columns: 1fr
+            }
+
+            .landing-hero-actions a {
+                width: 100%;
+                text-align: center
+            }
+        }
+
+        @media(max-width:430px) {
+            .top {
+                align-items: flex-start
+            }
+
+            .brand-lockup {
+                align-items: flex-start;
+                flex: 1
+            }
+
+            .brand-logo {
+                width: 74px
+            }
+
+            .brand-copy>small {
+                max-width: 190px
+            }
+
+            .top #who {
+                flex-direction: column;
+                align-items: flex-end;
+                font-size: 10px
+            }
+
+            .top #who:before {
+                display: none
+            }
+        }
+
+        @media(max-width:380px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a class="skip-link" href="#app">Passer au contenu principal</a>
+    <header class="top"><a class="brand-lockup" href="/"
+            aria-label="Accueil — Commission Finance de la Section UIDT-EPT"><svg class="brand-logo"
+                viewBox="0 0 174 58" role="img" aria-labelledby="brand-title">
+                <title id="brand-title">Section UIDT-EPT</title>
+                <defs>
+                    <linearGradient id="brand-gold" x1="0" x2="1">
+                        <stop stop-color="#b97b25" />
+                        <stop offset="1" stop-color="#e3bd62" />
+                    </linearGradient>
+                    <linearGradient id="brand-rose" x1="0" x2="1">
+                        <stop stop-color="#e58bae" />
+                        <stop offset="1" stop-color="#ad315c" />
+                    </linearGradient>
+                </defs>
+                <rect x="1" y="1" width="172" height="56" rx="13" fill="var(--card)" stroke="var(--line)" />
+                <path d="M13 46h148" stroke="url(#brand-rose)" stroke-width="2" stroke-linecap="round" /><text x="14"
+                    y="18" fill="var(--ac)" font-family="'Source Sans 3',Arial,sans-serif" font-size="8"
+                    font-weight="700" letter-spacing="2.1">SECTION</text><text x="12" y="42" fill="url(#brand-gold)"
+                    font-family="'Source Sans 3',Arial,sans-serif" font-size="21" font-weight="800"
+                    letter-spacing="-.8">UIDT</text><text x="75" y="42" fill="var(--ink)"
+                    font-family="'Source Sans 3',Arial,sans-serif" font-size="18" font-weight="700">-</text><text x="89"
+                    y="42" fill="url(#brand-rose)" font-family="'Source Sans 3',Arial,sans-serif" font-size="21"
+                    font-weight="800" letter-spacing="-.8">EPT</text>
+                <circle cx="158" cy="14" r="3" fill="url(#brand-gold)" />
+            </svg><span class="brand-copy">
+                <h1>Commission Finance</h1><small id="st">Section UIDT-EPT · DMWM · Moustarchidine Junior · Comité
+                    inter-universitaire de Thiès</small>
+            </span></a>
+        <div id="who" class="k"></div>
+    </header>
+    <nav id="nav" aria-label="Navigation principale"></nav>
+    <main id="app" aria-live="polite">
+        <div class="card">Chargement de votre espace…</div>
+    </main>
+    <footer id="site-footer"></footer>
+    <dialog id="member-dialog" class="member-profile" aria-labelledby="profile-title">
+        <div id="member-dialog-content"></div>
+    </dialog>
+    <dialog id="password-dialog" class="member-profile password-dialog" aria-labelledby="password-title">
+        <h2 id="password-title">Modifier mon mot de passe</h2>
+        <p class="k">Choisissez un mot de passe personnel de 8 à 128 caractères. Vos autres sessions seront déconnectées.</p>
+        <div class="profile-photo-form">
+            <div id="profile-photo-preview"></div>
+            <div>
+                <label>Photo de profil
+                    <input id="profile-photo" type="file" accept="image/jpeg,image/png,image/webp">
+                </label>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                    <button type="button" class="g" id="save-profile-photo">Enregistrer la photo</button>
+                    <button type="button" class="g" id="remove-profile-photo">Retirer</button>
+                </div>
+            </div>
+        </div>
+        <div id="profile-photo-status" role="status" aria-live="polite"></div>
+        <form id="password-form">
+            <label>Mot de passe actuel
+                <input name="currentPassword" type="password" autocomplete="current-password" maxlength="128" required>
+            </label>
+            <label>Nouveau mot de passe
+                <input name="newPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required aria-describedby="new-password-help">
+                <small class="hint" id="new-password-help">8 à 128 caractères.</small>
+            </label>
+            <label>Confirmer le nouveau mot de passe
+                <input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+            </label>
+            <div class="bad" id="password-error" role="alert"></div>
+            <div class="dialog-actions">
+                <button class="g" type="button" data-a="closePassword">Annuler</button>
+                <button class="b" type="submit">Enregistrer</button>
+            </div>
+        </form>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script>
+        const ORG_NAME = "Commission Trésorerie et Capacitation (CTC)";
+        const MO = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+        const TABS = [["dash", "Tableau de bord"], ["mem", "Membres"], ["annual", "Participation annuelle"], ["evt", "Cotisations"], ["pro", "Ventes"], ["cai", "Caisse"], ["sav", "Sauvegarde"], ["eq", "Équipe"]];
+        let S = { members: [], events: [], projects: [], ledger: [], participations: [] }, ui = { tab: "dash", year: new Date().getFullYear(), open: {} };
+
+        let db = null, warned = false, participationApiAvailable = null; const COLS = ["members", "events", "projects", "ledger", "participations"], base = Object.fromEntries(COLS.map(c => [c, Object.create(null)]));
+        const notify = (message, type = "") => { const box = document.getElementById("toast"); box.textContent = message; box.className = type; requestAnimationFrame(() => box.classList.add("show")); clearTimeout(notify.timer); notify.timer = setTimeout(() => box.classList.remove("show"), 4200) };
+        const fail = e => { if (!warned) { warned = true; notify(e && e.message ? `Enregistrement impossible : ${e.message}` : "Enregistrement impossible. Vérifiez vos droits et votre connexion.", "error") } };
+        function sync() { COLS.forEach(c => { const ids = new Set(); S[c].forEach(o => { ids.add(o.id); const j = JSON.stringify(o); if (base[c][o.id] !== j) { base[c][o.id] = j; db.collection(c).doc(o.id).set(JSON.parse(j)).catch(fail) } }); Object.keys(base[c]).forEach(id => { if (!ids.has(id)) { delete base[c][id]; db.collection(c).doc(id).delete().catch(fail) } }) }) }
+        const save = () => { if (db) sync() };
+        const uid = () => Math.random().toString(36).slice(2, 9), today = () => new Date().toISOString().slice(0, 10);
+        const F = n => new Intl.NumberFormat("fr-FR").format(Math.round(n || 0)) + " FCFA";
+        const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+        const userInitials = name => String(name || "").trim().split(/\s+/).slice(0, 2).map(x => x[0] || "").join("").toUpperCase();
+        const userAvatar = (name, photo) => photo
+            ? `<img class="user-avatar" src="${esc(photo)}" alt="Photo de ${esc(name)}">`
+            : `<span class="user-avatar user-avatar-initials" aria-label="Photo de ${esc(name)}">${esc(userInitials(name) || "?")}</span>`;
+        async function resizeProfilePhoto(file) {
+            if (!file) return null;
+            if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) throw new Error("Choisissez une image JPEG, PNG ou WebP.");
+            if (file.size > 5 * 1024 * 1024) throw new Error("La photo ne doit pas dépasser 5 Mo.");
+            const url = URL.createObjectURL(file);
+            try {
+                const image = await new Promise((resolve, reject) => { const i = new Image(); i.onload = () => resolve(i); i.onerror = reject; i.src = url });
+                const size = 256, canvas = document.createElement("canvas");
+                canvas.width = size; canvas.height = size;
+                const side = Math.min(image.width, image.height), sx = (image.width - side) / 2, sy = (image.height - side) / 2;
+                canvas.getContext("2d").drawImage(image, sx, sy, side, side, 0, 0, size, size);
+                return canvas.toDataURL("image/jpeg", 0.82);
+            } finally { URL.revokeObjectURL(url) }
+        }
+        const mn = id => (S.members.find(m => m.id == id) || { name: "?" }).name;
+        const paidOf = e => Object.values(e.pay).reduce((a, p) => a + (+p.paid || 0), 0);
+        function applyOrganizationBranding() {
+            document.title = `${ORG_NAME} — UIDT-EPT`;
+            document.querySelector('meta[name="description"]').content = `Espace de gestion de la ${ORG_NAME} de la Section UIDT-EPT, DMWM.`;
+            const heading = document.querySelector(".brand-copy h1"); if (heading) heading.textContent = ORG_NAME;
+            const lockup = document.querySelector(".brand-lockup"); if (lockup) lockup.setAttribute("aria-label", `Accueil — ${ORG_NAME} de la Section UIDT-EPT`);
+            const subtitle = document.getElementById("st"); if (subtitle) subtitle.textContent = "CTC · Section UIDT-EPT · DMWM · Moustarchidine Junior";
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let node;
+            while (node = walker.nextNode()) node.nodeValue = node.nodeValue.replace(/Commission Finance/gi, ORG_NAME).replace(/l’espace financier/gi, "l’espace de trésorerie et de capacitation");
+        }
+        const dateLabel = d => d ? new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(new Date(`${d}T00:00:00`)) : "Date non renseignée";
+        function memberFinance(m) {
+            const events = S.events.map(e => { const paid = +(e.pay[m.id] || {}).paid || 0; return { date: e.date, name: e.name, expected: e.amount, paid, due: Math.max(0, e.amount - paid) } }), participations = S.participations.map(p => { const payments = p.pay[m.id] || [], paid = payments.reduce((sum, x) => sum + x.amount, 0); return { year: p.year, expected: p.amount, paid, due: Math.max(0, p.amount - paid), payments } }), sales = S.projects.flatMap(p => p.sales.filter(s => s.mid == m.id).map(s => ({ project: p.name, date: s.date, qty: s.qty, revenue: s.qty * p.price }))), fees = events.reduce((sum, e) => sum + e.paid, 0), annual = participations.reduce((sum, p) => sum + p.paid, 0), salesTotal = sales.reduce((sum, s) => sum + s.revenue, 0), present = S.events.filter(e => (e.pay[m.id] || {}).present).length;
+            return { events, participations, sales, fees, annual, salesTotal, present, totalPaid: fees + annual }
+        }
+        function memberProfile(id) {
+            const m = S.members.find(x => x.id === id); if (!m) return `<div class="profile-top"><h2 id="profile-title">Profil indisponible</h2><button class="g" data-a="closeProfile">Fermer</button></div><p class="em">Ce membre n’est plus dans la liste.</p>`;
+            const f = memberFinance(m), initials = m.name.trim().split(/\s+/).slice(0, 2).map(x => x[0] || "").join("").toUpperCase(), joined = m.joined ? dateLabel(m.joined) : "Non renseignée";
+            return `<div class="profile-top"><div class="profile-heading"><div class="profile-avatar" aria-hidden="true">${esc(initials)}</div><div><h2 id="profile-title" style="margin:0">${esc(m.name)}</h2><div class="k">${esc(m.tel || "Téléphone non renseigné")} · ${esc(m.position || "Fonction non renseignée")} · Adhésion : ${joined}</div></div></div><button class="g" data-a="closeProfile">Fermer</button></div>
+<section class="profile-section"><h3>Résumé du membre</h3><div class="profile-kpis"><div class="profile-kpi"><span class="hint">Cotisations réglées</span><strong>${F(f.fees)}</strong></div><div class="profile-kpi"><span class="hint">Participations annuelles réglées</span><strong>${F(f.annual)}</strong></div><div class="profile-kpi"><span class="hint">Total versé à la commission</span><strong>${F(f.totalPaid)}</strong></div><div class="profile-kpi"><span class="hint">Présences aux événements</span><strong>${f.present} / ${S.events.length}</strong></div><div class="profile-kpi"><span class="hint">Ventes réalisées</span><strong>${F(f.salesTotal)}</strong></div></div></section>
+<section class="profile-section"><h3>Participations annuelles</h3>${tbl(["Année", "#Montant prévu", "#Versé", "#Reste"], f.participations.map(p => `<tr><td>${p.year}</td><td class="n">${F(p.expected)}</td><td class="n">${F(p.paid)}</td><td class="n ${p.due ? "bad" : "ok"}">${p.due ? F(p.due) : "Soldé"}</td></tr>`), "Aucune participation annuelle enregistrée pour ce membre.")}</section>
+<section class="profile-section"><h3>Cotisations aux événements</h3>${tbl(["Événement", "Date", "#Prévu", "#Versé", "#Reste"], f.events.map(e => `<tr><td>${esc(e.name)}</td><td>${dateLabel(e.date)}</td><td class="n">${F(e.expected)}</td><td class="n">${F(e.paid)}</td><td class="n ${e.due ? "bad" : "ok"}">${e.due ? F(e.due) : "Soldé"}</td></tr>`), "Aucune cotisation d’événement enregistrée pour ce membre.")}</section>
+<section class="profile-section"><h3>Activité de vente</h3>${tbl(["Projet", "Date", "#Articles", "#Recette"], f.sales.map(s => `<tr><td>${esc(s.project)}</td><td>${dateLabel(s.date)}</td><td class="n">${s.qty}</td><td class="n">${F(s.revenue)}</td></tr>`), "Aucune vente enregistrée pour ce membre.")}</section><p class="hint">Ce profil regroupe les informations déjà enregistrées dans la commission. Les paiements et participations sont consultables par les membres autorisés à lire les finances.</p>`
+        }
+        function openMemberProfile(id) {
+            const dialog = document.getElementById("member-dialog"); document.getElementById("member-dialog-content").innerHTML = memberProfile(id); dialog.showModal()
+        }
+        function txs() {
+            const t = [];
+            S.events.forEach(e => { const s = paidOf(e); if (s) t.push({ d: e.date, type: "r", label: "Cotisations – " + e.name, amt: s }) });
+            S.participations.forEach(p => Object.entries(p.pay || {}).forEach(([mid, payments]) => payments.forEach(payment => t.push({ d: payment.date, type: "r", label: `Participation ${p.year} – ${mn(mid)}`, amt: payment.amount }))));
+            S.projects.forEach(p => {
+                if (!p.sales.length) return; const q = p.sales.reduce((a, s) => a + s.qty, 0), d = p.sales.map(s => s.date).sort().pop();
+                t.push({ d, type: "r", label: "Ventes – " + p.name, amt: q * p.price }); if (p.cost) t.push({ d, type: "d", label: "Achat – " + p.name, amt: q * p.cost })
+            });
+            S.ledger.forEach(l => t.push({ d: l.date, type: l.type, label: l.label, amt: +l.amount, id: l.id }));
+            return t.sort((a, b) => b.d.localeCompare(a.d))
+        }
+        const sum = (t, ty) => t.filter(x => x.type == ty).reduce((a, x) => a + x.amt, 0);
+        const tbl = (h, rows, empty) => rows.length ? `<div class="sc"><table><thead><tr>${h.map(x => `<th scope="col" class="${x[0] == "#" ? "n" : ""}">${x.replace(/^#/, "")}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table></div>` : `<div class="em">${empty}</div>`;
+
+        function dash() {
+            const t = txs(), R = sum(t, "r"), D = sum(t, "d");
+            const due = S.events.reduce((a, e) => a + Math.max(0, e.amount * S.members.length - paidOf(e)), 0) + S.participations.reduce((a, p) => a + S.members.reduce((b, m) => b + Math.max(0, p.amount - (p.pay[m.id] || []).reduce((c, r) => c + r.amount, 0)), 0), 0);
+            const yrs = [...new Set([ui.year, ...t.map(x => +x.d.slice(0, 4))])].sort();
+            const mo = MO.map((m, i) => { const f = t.filter(x => +x.d.slice(0, 4) == ui.year && +x.d.slice(5, 7) == i + 1); return { m, r: sum(f, "r"), d: sum(f, "d") } });
+            const mx = Math.max(1, ...mo.map(x => Math.max(x.r, x.d)));
+            const hour = new Date().getHours(), hello = hour < 12 ? "Bonjour" : hour < 18 ? "Bon après-midi" : "Bonsoir";
+            return `<div class="card welcome"><h2>${hello}${ME ? `, ${esc(ME.name)}` : ""}</h2><div class="k">Voici le point de situation de votre commission. Retrouvez vos opérations et vos suivis en un coup d’œil.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><button class="g" data-t="annual">Suivre la participation annuelle</button><button class="g" data-t="evt">Voir les cotisations</button><button class="g" data-t="cai">Consulter la caisse</button></div></div>
+<div class="grid"><div class="card"><div class="k">Recettes cumulées</div><div class="v ok">${F(R)}</div></div><div class="card"><div class="k">Dépenses cumulées</div><div class="v bad">${F(D)}</div></div><div class="card"><div class="k">Solde en caisse</div><div class="v">${F(R - D)}</div></div><div class="card"><div class="k">Cotisations et participations restant à payer</div><div class="v">${F(due)}</div></div></div>
+<div class="card"><div class="member-summary"><div><h2 style="margin:0">Membres de l’organisation</h2><div class="k">${S.members.length} membre(s) enregistré(s)</div></div><button class="g" data-t="mem">Voir l’annuaire complet</button></div>${S.members.length ? `<div class="member-preview" style="margin-top:16px">${[...S.members].sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 6).map(m => { const f = memberFinance(m); return `<article><div><strong>${esc(m.name)}</strong><span class="hint">${esc(m.position || "Fonction non renseignée")} · ${esc(m.tel || "Téléphone non renseigné")} · Cotisations et participations : ${F(f.totalPaid)}</span></div><button class="g" data-a="profile" data-i="${m.id}" aria-label="Voir le profil de ${esc(m.name)}">Voir le profil</button></article>` }).join("")}</div>${S.members.length > 6 ? `<p class="hint" style="margin:12px 0 0">Affichage des 6 derniers membres ajoutés. Consultez l’annuaire pour voir tous les membres.</p>` : ""}` : `<div class="em">Aucun membre n’est encore enregistré. Commencez par créer les profils des membres de votre organisation.</div><button class="b" data-t="mem">Ajouter un membre</button>`}</div>
+<div class="card"><h2>Bilan mensuel <select data-a="year" aria-label="Année du bilan">${yrs.map(y => `<option ${y == ui.year ? "selected" : ""}>${y}</option>`).join("")}</select></h2>
+${tbl(["Mois", "#Recettes", "#Dépenses", "#Solde", ""], mo.map(x => `<tr><td>${x.m}</td><td class="n">${F(x.r)}</td><td class="n">${F(x.d)}</td><td class="n ${x.r - x.d < 0 ? "bad" : ""}">${F(x.r - x.d)}</td><td><div class="bar"><i style="width:${x.r / mx * 100}%"></i></div></td></tr>`), "")}</div>`
+        }
+
+        function mem() {
+            const ne = S.events.length;
+            return `<div class="card"><div class="member-summary"><div><h2 style="margin:0">Annuaire des membres</h2><div class="k">${S.members.length} profil(s) · Informations et activité de l’organisation</div></div><button class="g" data-t="dash">Retour au tableau de bord</button></div><p class="hint">Ouvrez un profil pour consulter les coordonnées, la fonction, la date d’adhésion, les cotisations, la participation annuelle, les présences et les ventes enregistrées.</p><label class="member-search">Rechercher un membre<input type="search" data-member-search placeholder="Nom ou téléphone" autocomplete="off" aria-label="Rechercher un membre par nom ou téléphone"></label><div id="member-search-empty" class="em" hidden>Aucun membre ne correspond à cette recherche.</div>
+${tbl(["Membre", "Téléphone", "#Cotisations", "#Participation annuelle", "#Présences", "#Ventes", "Profil", ""], S.members.map(m => {
+                const f = memberFinance(m), p = f.present;
+                return `<tr data-member-row data-member-name="${esc(m.name.toLocaleLowerCase("fr"))}" data-member-phone="${esc((m.tel || "").replace(/\D/g, "").replace(/^221/, ""))}"><td><strong>${esc(m.name)}</strong><div class="hint">${esc(m.position || "Fonction non renseignée")} · Adhésion : ${m.joined ? dateLabel(m.joined) : "Non renseignée"}</div></td><td>${esc(m.tel || "—")}</td><td class="n">${F(f.fees)}</td><td class="n">${F(f.annual)}</td><td class="n">${p}/${ne}${ne ? ` (${Math.round(p / ne * 100)}%)` : ""}</td><td class="n">${F(f.salesTotal)}</td><td><button class="g" data-a="profile" data-i="${m.id}" aria-label="Voir le profil de ${esc(m.name)}">Ouvrir</button></td><td><button class="x" data-a="delM" data-i="${m.id}" aria-label="Retirer ${esc(m.name)}">Retirer</button></td></tr>`
+            }), "Aucun membre. Ajoutez le premier ci-dessus.")}</div>
+<div class="card"><h2>Ajouter un membre</h2><p class="k">Renseignez son identité, sa fonction et sa date d’adhésion pour créer un profil complet. Le téléphone et la fonction sont facultatifs.</p><form id="fm"><p class="field-key"><span class="req">*</span> Champ obligatoire</p><label>Nom complet <span class="req" aria-hidden="true">*</span><input name="name" autocomplete="name" minlength="2" maxlength="80" placeholder="Ex. Awa Diop" aria-describedby="member-name-help" required><small id="member-name-help" class="hint">2 à 80 caractères.</small></label><label>Téléphone <span class="hint">(facultatif)</span><input name="tel" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" title="Format sénégalais : 9 chiffres, mobile commençant par 70, 75, 76, 77 ou 78, ou fixe commençant par 33. Indicatif facultatif : +221 ou 00221." placeholder="Ex. +221 77 123 45 67" aria-describedby="member-phone-help"><small id="member-phone-help" class="hint">9 chiffres : mobile 70, 75, 76, 77 ou 78 ; fixe 33. Saisissez avec ou sans +221. Le numéro sera uniformisé automatiquement.</small></label><label>Fonction dans l’organisation <span class="hint">(facultatif)</span><input name="position" minlength="2" maxlength="80" placeholder="Ex. Trésorière, secrétaire, membre" aria-describedby="member-position-help"><small id="member-position-help" class="hint">2 à 80 caractères si renseignée.</small></label><label>Date d’adhésion <span class="req" aria-hidden="true">*</span><input type="date" name="joined" value="${today()}" required aria-describedby="member-joined-help"><small id="member-joined-help" class="hint">Indiquez la date réelle d’entrée dans l’organisation.</small></label><button class="b">Ajouter le membre</button></form></div>`
+        }
+
+        function annual() {
+            if (participationApiAvailable === false) return `<div class="card"><h2>Participation annuelle</h2><p class="k">Le serveur en cours n’a pas encore chargé la gestion de la participation annuelle. Redémarrez le serveur Node.js (arrêtez-le avec Ctrl+C, puis relancez <code>npm start</code>) et rechargez cette page.</p></div>`;
+            const currentYear = new Date().getFullYear();
+            return `<div class="card"><h2>Participation annuelle des membres</h2><p class="k">Suivez la contribution annuelle demandée à chaque membre de l’organisation. Le montant est commun à tous les membres enregistrés. Chaque règlement, même partiel, est daté et ajouté aux recettes de la caisse.</p>
+<section class="guide" aria-labelledby="annual-howto"><h3 id="annual-howto">Comment utiliser ce suivi</h3><ol><li><strong>Avant de commencer :</strong> ajoutez ou vérifiez les membres de l’organisation dans l’onglet <strong>Membres</strong>.</li><li><strong>Créer l’année :</strong> choisissez l’année et le montant de participation décidé par la commission. Une seule participation peut être créée par année.</li><li><strong>Enregistrer les règlements :</strong> pour chaque membre, indiquez le montant réellement reçu et la date du versement, puis cliquez sur <strong>Enregistrer</strong>. Un versement partiel est accepté.</li><li><strong>Suivre le reste :</strong> le solde de chaque membre et le total à recevoir se mettent à jour automatiquement. Utilisez <strong>Payer le solde</strong> si le membre règle tout ce qui reste.</li><li><strong>Vérifier la caisse :</strong> chaque versement apparaît dans les recettes à la date où il a été reçu. L’historique permet de contrôler ou retirer un versement enregistré par erreur.</li></ol><small class="hint">Les administrateurs et trésoriers peuvent saisir ou corriger les versements. Les lecteurs peuvent consulter le suivi.</small></section>
+<div class="requirements" aria-label="Informations nécessaires"><span>À préparer : liste des membres</span><span>Année concernée</span><span>Montant décidé par membre</span><span>Pour chaque paiement : montant reçu et date</span></div>
+<h3>Créer la participation de l’année</h3>${S.members.length ? `<form id="fannual"><p class="field-key"><span class="req">*</span> Les deux champs sont obligatoires. Montants en FCFA, sans décimales.</p><label>Année concernée <span class="req" aria-hidden="true">*</span><input type="number" name="year" min="2000" max="${currentYear + 1}" step="1" value="${currentYear}" required aria-describedby="annual-year-help"><small id="annual-year-help" class="hint">Année entière de 2000 à ${currentYear + 1}. Elle ne peut être créée qu’une seule fois.</small></label><label>Montant annuel par membre (FCFA) <span class="req" aria-hidden="true">*</span><input type="number" name="amount" min="1" max="9007199254740991" step="1" inputmode="numeric" required placeholder="Ex. 10000" aria-describedby="annual-amount-help"><small id="annual-amount-help" class="hint">Saisissez le montant décidé pour un membre ; il sera appliqué à tous. Nombre entier supérieur à 0.</small></label><button class="b">Créer la participation annuelle</button></form><p class="hint">Membres actuellement concernés : <strong>${S.members.length}</strong>. Les règlements et soldes individuels seront affichés après la création.</p>` : `<div class="em">Pour commencer, ajoutez d’abord les membres de la commission dans l’onglet <strong>Membres</strong>. Vous pourrez ensuite créer la participation de l’année et enregistrer les paiements.</div><button class="g" data-t="mem">Aller à la gestion des membres</button>`}</div>
+${[...S.participations].sort((a, b) => b.year - a.year).map(p => {
+                const total = S.members.length * p.amount, paid = S.members.reduce((a, m) => a + (p.pay[m.id] || []).reduce((b, x) => b + x.amount, 0), 0), due = Math.max(0, total - paid);
+                return `<div class="card"><details data-id="annual-${p.year}" ${ui.open["annual-" + p.year] ? "open" : ""}><summary><span>Participation annuelle ${p.year} · ${F(p.amount)} par membre</span><span>${F(paid)} / ${F(total)} reçus</span></summary><div class="bar" style="margin:12px 0"><i style="width:${total ? Math.min(100, paid / total * 100) : 0}%"></i></div><p class="k">${S.members.length} membre(s) · ${F(due)} restant(s) à recevoir · Les versements sont ajoutés aux recettes de la caisse.</p><p class="hint">Ouvrez une ligne de membre, saisissez la somme effectivement reçue (au plus le solde restant) et la date du paiement, puis enregistrez. Plusieurs versements partiels sont possibles.</p>
+<div class="report-actions"><button class="b" data-a="annualPrint" data-y="${p.year}">Imprimer / enregistrer en PDF</button><button class="g" data-a="annualCsv" data-y="${p.year}">Télécharger la liste CSV</button></div><p class="hint">Le document imprimable comprend le récapitulatif, la liste des membres, les paiements, les soldes et un espace pour les signatures. Pour créer un PDF, choisissez « Enregistrer au format PDF » dans la fenêtre d’impression.</p>
+${tbl(["Membre", "Total versé", "#Reste à payer", "Nouveau versement", "Historique"], S.members.map(m => {
+                    const payments = p.pay[m.id] || [], amount = payments.reduce((a, x) => a + x.amount, 0), remaining = Math.max(0, p.amount - amount);
+                    return `<tr><td>${esc(m.name)}</td><td class="n">${F(amount)}</td><td class="n ${remaining ? "bad" : "ok"}">${remaining ? F(remaining) : "Soldé"}</td><td>${remaining ? document.body.classList.contains("ro") ? `<span class="k">Saisie réservée aux trésoriers et administrateurs.</span>` : `<div class="annual-fields"><label>Montant reçu (FCFA)<input type="number" data-a="annualAmount" data-y="${p.year}" data-m="${m.id}" min="1" max="${remaining}" step="1" inputmode="numeric" placeholder="${remaining}" aria-label="Montant du versement pour ${esc(m.name)}, maximum ${F(remaining)}"><small class="hint">Entier de 1 à ${F(remaining)}.</small></label><label>Date du versement<input type="date" data-a="annualDate" data-y="${p.year}" data-m="${m.id}" value="${today()}" aria-label="Date du versement de ${esc(m.name)}"><small class="hint">Date réelle de réception.</small></label><button class="b" data-a="annualPay" data-y="${p.year}" data-m="${m.id}">Enregistrer</button>${remaining > 1 ? `<button class="g" data-a="annualFull" data-y="${p.year}" data-m="${m.id}">Payer le solde</button>` : ""}</div>` : "—"}</td><td>${payments.length ? `<details><summary>${payments.length} versement(s)</summary><ul>${payments.map(x => `<li>${x.date} · ${F(x.amount)} ${document.body.classList.contains("ro") ? "" : `<button class="x" data-a="annualDelPayment" data-y="${p.year}" data-m="${m.id}" data-p="${x.id}" aria-label="Supprimer le versement de ${F(x.amount)} du ${x.date} pour ${esc(m.name)}">Retirer</button>`}</li>`).join("")}</ul></details>` : `<span class="k">Aucun versement</span>`}</td></tr>`
+                }), "Ajoutez d’abord des membres.")}
+${!document.body.classList.contains("ro") ? `<button class="x" data-a="annualDelete" data-y="${p.year}">Supprimer la participation ${p.year}</button>` : ""}</details></div>`
+            }).join("") || `<div class="card em">Aucune participation annuelle enregistrée. Créez celle de l’année en cours pour commencer le suivi.</div>`}`
+        }
+
+        function evt() {
+            return `<div class="card"><h2>Créer une cotisation</h2><p class="k">Créez une cotisation pour un événement, puis enregistrez les règlements et présences de chaque membre.</p><form id="fe"><p class="field-key"><span class="req">*</span> Champ obligatoire · Les montants sont en FCFA, sans décimales.</p><label>Nom de l’événement <span class="req" aria-hidden="true">*</span><input name="name" minlength="2" maxlength="100" required placeholder="Ex. Fête de fin d’année" aria-describedby="event-name-help"><small id="event-name-help" class="hint">2 à 100 caractères.</small></label><label>Date de l’événement <span class="req" aria-hidden="true">*</span><input type="date" name="date" value="${today()}" required aria-describedby="event-date-help"><small id="event-date-help" class="hint">La date peut être passée ou future.</small></label><label>Cotisation par membre (FCFA) <span class="req" aria-hidden="true">*</span><input type="number" name="amount" min="1" max="9007199254740991" step="1" inputmode="numeric" required placeholder="Ex. 5000" aria-describedby="event-amount-help"><small id="event-amount-help" class="hint">Montant entier supérieur à 0.</small></label><button class="b">Créer la cotisation</button></form></div>
+${S.events.map(e => {
+                const p = paidOf(e), tot = e.amount * S.members.length;
+                return `<div class="card"><details data-id="${e.id}" ${ui.open[e.id] ? "open" : ""}><summary><span>${esc(e.name)} · ${e.date}</span><span>${F(p)} / ${F(tot)}</span></summary>
+<div class="bar" style="margin:8px 0"><i style="width:${tot ? Math.min(100, p / tot * 100) : 0}%"></i></div>
+${tbl(["Membre", "Présent", "#Payé", "#Reste", ""], S.members.map(m => {
+                    const y = e.pay[m.id] || { paid: 0, present: false }, r = e.amount - (+y.paid || 0);
+                    return `<tr><td>${esc(m.name)}</td><td><input type="checkbox" data-a="pres" data-e="${e.id}" data-m="${m.id}" ${y.present ? "checked" : ""} aria-label="Présence de ${esc(m.name)}"></td><td class="n"><input type="number" min="0" max="${e.amount}" step="1" inputmode="numeric" value="${+y.paid || 0}" data-a="paid" data-e="${e.id}" data-m="${m.id}" aria-label="Montant payé par ${esc(m.name)}, maximum ${F(e.amount)}" title="Montant entier en FCFA, entre 0 et ${e.amount}" required></td><td class="n ${r > 0 ? "bad" : "ok"}">${r > 0 ? F(r) : "Soldé"}</td><td>${r > 0 ? `<button class="g" data-a="full" data-e="${e.id}" data-m="${m.id}">Tout payer</button>` : ""}</td></tr>`
+                }), "Ajoutez d’abord des membres.")}
+<button class="x" data-a="delE" data-i="${e.id}">Supprimer l’événement</button></details></div>`
+            }).join("") || `<div class="em">Aucun événement pour l’instant.</div>`}`
+        }
+
+        function pro() {
+            return `<div class="card"><h2>Créer un projet de vente</h2><p class="k">Définissez le prix et le coût par article. Le coût peut être nul si le produit ne nécessite pas d’achat.</p><form id="fp"><p class="field-key"><span class="req">*</span> Champ obligatoire · Les montants sont en FCFA, sans décimales.</p><label>Nom du produit ou projet <span class="req" aria-hidden="true">*</span><input name="name" minlength="2" maxlength="100" required placeholder="Ex. T-shirts de la commission" aria-describedby="project-name-help"><small id="project-name-help" class="hint">2 à 100 caractères.</small></label><label>Prix de vente unitaire (FCFA) <span class="req" aria-hidden="true">*</span><input type="number" name="price" min="1" max="9007199254740991" step="1" inputmode="numeric" required placeholder="Ex. 10000" aria-describedby="project-price-help"><small id="project-price-help" class="hint">Montant entier supérieur à 0.</small></label><label>Coût d’achat unitaire (FCFA) <span class="hint">(facultatif)</span><input type="number" name="cost" min="0" max="9007199254740991" step="1" inputmode="numeric" value="0" aria-describedby="project-cost-help"><small id="project-cost-help" class="hint">Montant entier ; 0 si aucun coût.</small></label><button class="b">Créer le projet</button></form></div>
+${S.projects.map(p => {
+                const q = p.sales.reduce((a, s) => a + s.qty, 0), R = q * p.price, C = q * p.cost;
+                return `<div class="card"><details data-id="${p.id}" ${ui.open[p.id] ? "open" : ""}><summary><span>${esc(p.name)} · ${q} vendu(s)</span><span class="${R - C < 0 ? "bad" : "ok"}">Bénéfice ${F(R - C)}</span></summary>
+<p class="k">Prix ${F(p.price)} · Coût ${F(p.cost)} · Recette ${F(R)} · Dépense ${F(C)}</p>
+<form data-p="${p.id}" class="fs"><p class="field-key"><span class="req">*</span> Champ obligatoire · Enregistrez une vente par membre, quantité et date.</p><label>Vendeur <span class="req" aria-hidden="true">*</span><select name="mid" required aria-describedby="sale-member-help-${p.id}"><option value="">Choisir un membre</option>${S.members.map(m => `<option value="${m.id}">${esc(m.name)}</option>`).join("")}</select><small id="sale-member-help-${p.id}" class="hint">${S.members.length ? "Sélectionnez le membre qui a réalisé la vente." : "Ajoutez un membre avant d’enregistrer une vente."}</small></label><label>Quantité vendue <span class="req" aria-hidden="true">*</span><input type="number" name="qty" min="1" max="9007199254740991" step="1" inputmode="numeric" value="1" required aria-describedby="sale-qty-help-${p.id}"><small id="sale-qty-help-${p.id}" class="hint">Nombre entier supérieur ou égal à 1.</small></label><label>Date de la vente <span class="req" aria-hidden="true">*</span><input type="date" name="date" value="${today()}" required aria-describedby="sale-date-help-${p.id}"><small id="sale-date-help-${p.id}" class="hint">Date réelle de la vente.</small></label><button class="b">Enregistrer la vente</button></form>
+${tbl(["Date", "Vendeur", "#Qté", "#Montant", ""], p.sales.map(s => `<tr><td>${s.date}</td><td>${esc(mn(s.mid))}</td><td class="n">${s.qty}</td><td class="n">${F(s.qty * p.price)}</td><td><button class="x" data-a="delS" data-i="${p.id}" data-s="${s.id}">Retirer</button></td></tr>`), "Aucune vente enregistrée.")}
+<button class="x" data-a="delP" data-i="${p.id}">Supprimer le projet</button></details></div>`
+            }).join("") || `<div class="em">Aucun projet de vente.</div>`}`
+        }
+
+        function cai() {
+            return `<div class="card"><h2>Ajouter un mouvement de caisse</h2><p class="k">Saisissez une opération qui n’est pas déjà suivie dans les cotisations ou les ventes, afin d’éviter les doublons.</p><form id="fl"><p class="field-key"><span class="req">*</span> Champ obligatoire · Les montants sont en FCFA, sans décimales.</p><label>Type de mouvement <span class="req" aria-hidden="true">*</span><select name="type" required aria-describedby="ledger-type-help"><option value="r">Recette — argent reçu</option><option value="d">Dépense — argent sorti</option></select><small id="ledger-type-help" class="hint">Choisissez selon le sens du mouvement dans la caisse.</small></label><label>Désignation <span class="req" aria-hidden="true">*</span><input name="label" minlength="2" maxlength="140" required placeholder="Ex. Achat de fournitures" aria-describedby="ledger-label-help"><small id="ledger-label-help" class="hint">2 à 140 caractères ; indiquez le motif.</small></label><label>Date de l’opération <span class="req" aria-hidden="true">*</span><input type="date" name="date" value="${today()}" required aria-describedby="ledger-date-help"><small id="ledger-date-help" class="hint">Date réelle de l’opération.</small></label><label>Montant (FCFA) <span class="req" aria-hidden="true">*</span><input type="number" name="amount" min="1" max="9007199254740991" step="1" inputmode="numeric" required placeholder="Ex. 2500" aria-describedby="ledger-amount-help"><small id="ledger-amount-help" class="hint">Montant entier supérieur à 0.</small></label><button class="b">Ajouter le mouvement</button></form>
+${tbl(["Date", "Désignation", "#Recette", "#Dépense", ""], txs().map(x => `<tr><td>${x.d}</td><td>${esc(x.label)}</td><td class="n ok">${x.type == "r" ? F(x.amt) : ""}</td><td class="n bad">${x.type == "d" ? F(x.amt) : ""}</td><td>${x.id ? `<button class="x" data-a="delL" data-i="${x.id}">Retirer</button>` : `<span class="k">auto</span>`}</td></tr>`), "Aucun mouvement.")}</div>`
+        }
+
+        function sav() { return `<div class="card"><h2>Sauvegarde et export</h2><p class="k">Choisissez le format adapté : le JSON sert à restaurer vos données, les fichiers CSV s’ouvrent dans Excel ou un tableur, et le rapport PDF est conçu pour l’impression et le partage.</p><section class="export-group"><h3>Documents prêts à consulter</h3><div class="export-actions"><button class="b" data-a="reportPrint">Imprimer / enregistrer le rapport en PDF</button><button class="g" data-a="membersCsv">Télécharger l’annuaire des membres (CSV)</button><button class="g" data-a="csv">Télécharger les mouvements de caisse (CSV)</button></div><p class="hint">Les CSV utilisent des colonnes séparées et des titres explicites. Pour créer un PDF, choisissez « Enregistrer au format PDF » dans la fenêtre d’impression.</p></section><section class="export-group"><h3>Sauvegarde technique</h3><p class="hint">Le fichier JSON contient toutes les données nécessaires pour restaurer l’application. Ce format est une sauvegarde technique, pas un document de présentation.</p><button class="b" data-a="exp">Télécharger la sauvegarde JSON</button></section><div data-writer-only><section class="export-group"><h3>Restaurer les données</h3><label>Fichier de sauvegarde JSON<input type="file" accept=".json,application/json" data-a="imp" aria-describedby="backup-help"><small id="backup-help" class="hint">Sélectionnez un fichier JSON exporté depuis cette application. Les données seront vérifiées avant restauration.</small></label><p class="k">La restauration remplace les données actuellement enregistrées. Exportez une copie avant de continuer.</p></section></div></div>` }
+
+        function eq() {
+            if (ME.role != "admin") return `<div class="em">Réservé à l’administrateur.</div>`;
+            return `<div class="card"><h2>Créer un compte utilisateur</h2><p class="k">Attribuez à chaque personne un compte individuel avec les droits adaptés à ses responsabilités.</p><form id="fu"><p class="field-key"><span class="req">*</span> Champ obligatoire</p><label>Nom d’utilisateur <span class="req" aria-hidden="true">*</span><input name="name" autocomplete="off" minlength="2" maxlength="80" required placeholder="Ex. awa.diop" aria-describedby="user-name-help"><small id="user-name-help" class="hint">2 à 80 caractères ; ce nom servira à la connexion.</small></label><label>Mot de passe provisoire <span class="req" aria-hidden="true">*</span><input name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required placeholder="8 caractères minimum" aria-describedby="user-password-help"><small id="user-password-help" class="hint">8 à 128 caractères. Transmettez-le de manière confidentielle.</small></label><label>Rôle <span class="req" aria-hidden="true">*</span><select name="role" required aria-describedby="user-role-help"><option value="tresorier">Trésorier — consulte et modifie les données</option><option value="lecteur">Lecteur — consulte uniquement</option><option value="admin">Administrateur — gère les comptes</option></select><small id="user-role-help" class="hint">Accordez uniquement les droits nécessaires.</small></label><div class="profile-photo-form"><div id="fu-photo-preview"></div><div><label>Photo de profil <span class="hint">(optionnelle)</span><input name="photoFile" type="file" accept="image/jpeg,image/png,image/webp"></label><small class="hint">JPEG, PNG ou WebP, 5 Mo maximum. La photo sera recadrée en carré.</small></div></div><button class="b">Créer le compte</button></form>
+${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row">${userAvatar(u.name, u.photo)}<strong>${esc(u.name)}</strong></div></td><td>${esc(({ admin:"Administrateur", tresorier:"Trésorier", lecteur:"Lecteur" })[u.role] || u.role)}</td><td>${u.id == ME.id ? "" : `<button class="x" data-a="delU" data-i="${u.id}">Supprimer</button>`}</td></tr>`), "")}</div>
+<div class="card"><h2>Journal des modifications</h2>${tbl(["Date", "Qui", "Action", "Élément"], AUD.map(a => `<tr><td>${a.t.slice(0, 16).replace("T", " ")}</td><td>${esc(a.u)}</td><td>${esc(a.a)}</td><td>${esc(a.col + " " + a.id)}</td></tr>`), "Aucune activité.")}</div>`
+        }
+        const V = { dash, mem, annual, evt, pro, cai, sav, eq };
+        function render() { document.getElementById("nav").innerHTML = TABS.map(t => `<button class="${t[0] == ui.tab ? "on" : ""}" data-t="${t[0]}" aria-current="${t[0] == ui.tab ? "page" : "false"}">${t[1]}</button>`).join(""); document.getElementById("app").innerHTML = V[ui.tab]() }
+        const dl = (n, txt, ty) => { const a = document.createElement("a"), url = URL.createObjectURL(new Blob([txt], { type: ty })); a.href = url; a.download = n; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000) };
+        const annualRecords = p => S.members.map(m => { const payments = p.pay[m.id] || [], paid = payments.reduce((sum, x) => sum + x.amount, 0); return { member: m, paid, due: Math.max(0, p.amount - paid), payments } }).sort((a, b) => a.member.name.localeCompare(b.member.name, "fr"));
+        const csvCell = value => { if (typeof value === "number" && Number.isFinite(value)) return String(value); let text = String(value ?? ""); if (/^[\s]*[=+\-@\t\r]/.test(text)) text = "'" + text; return `"${text.replace(/"/g, '""')}"` };
+        const csvDocument = (headers, rows) => "\uFEFF" + [headers, ...rows].map(row => row.map(csvCell).join(";")).join("\r\n");
+        const generatedDate = () => new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(new Date());
+        function downloadMembersCsv() {
+            const rows = [...S.members].sort((a, b) => a.name.localeCompare(b.name, "fr")).map((m, i) => [i + 1, m.name, m.tel || "", m.position || "", m.joined || ""]);
+            dl("annuaire-membres-ctc.csv", csvDocument(["N°", "Nom complet", "Téléphone", "Fonction", "Date d’adhésion"], rows), "text/csv;charset=utf-8");
+        }
+        function downloadCashCsv() {
+            const chronological = [...txs()].sort((a, b) => a.d.localeCompare(b.d));
+            let balance = 0;
+            const balances = new Map();
+            chronological.forEach((tx, index) => { balance += tx.type === "r" ? tx.amt : -tx.amt; balances.set(index, balance) });
+            const rows = chronological.map((tx, index) => [tx.d, tx.type === "r" ? "Recette" : "Dépense", tx.label, tx.type === "r" ? tx.amt : "", tx.type === "d" ? tx.amt : "", balances.get(index)]);
+            rows.reverse();
+            dl("journal-de-caisse-ctc.csv", csvDocument(["Date", "Type", "Désignation", "Recette (FCFA)", "Dépense (FCFA)", "Solde après opération (FCFA)"], rows), "text/csv;charset=utf-8");
+        }
+        function downloadAnnualCsv(p) {
+            const rows = annualRecords(p).map((r, i) => [i + 1, r.member.name, r.member.tel || "", p.amount, r.paid, r.due, r.payments.map(x => `${x.date} : ${x.amount} FCFA`).join(" | "), ""]);
+            dl(`participation-annuelle-${p.year}-ctc.csv`, csvDocument(["N°", "Nom du membre", "Téléphone", "Participation annuelle (FCFA)", "Total versé (FCFA)", "Solde restant (FCFA)", "Historique des versements", "Signature"], rows), "text/csv;charset=utf-8");
+        }
+        function printAnnualReport(p) {
+            const popup = window.open("", "_blank");
+            if (!popup) { notify("La fenêtre d’impression a été bloquée. Autorisez les fenêtres contextuelles pour télécharger le document.", "error"); return }
+            const rows = annualRecords(p), total = rows.length * p.amount, paid = rows.reduce((sum, r) => sum + r.paid, 0), due = rows.reduce((sum, r) => sum + r.due, 0), settled = rows.filter(r => !r.due).length, partial = rows.filter(r => r.paid > 0 && r.due > 0).length, unpaid = rows.filter(r => !r.paid).length, date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(new Date()), formatDate = value => new Intl.DateTimeFormat("fr-FR").format(new Date(`${value}T00:00:00`));
+            const reportRows = rows.map((r, i) => `<tr><td class="num">${i + 1}</td><td><strong>${esc(r.member.name)}</strong>${r.member.tel ? `<small>${esc(r.member.tel)}</small>` : ""}</td><td class="money">${F(p.amount)}</td><td class="money">${F(r.paid)}</td><td class="money ${r.due ? "due" : ""}">${r.due ? F(r.due) : "Soldé"}</td><td>${r.payments.length ? r.payments.map(x => `${esc(formatDate(x.date))} · ${F(x.amount)}`).join("<br>") : "—"}</td><td class="signature"></td></tr>`).join("");
+            popup.document.open();
+            popup.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Liste des participants ${p.year} — Commission Finance UIDT-EPT</title><style>
+@page{size:A4 landscape;margin:13mm}*{box-sizing:border-box}body{margin:0;color:#2a2024;font:11px/1.45 Arial,Helvetica,sans-serif}.masthead{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #842d50;padding:0 0 12px}.brand{font-size:12px;font-weight:700;letter-spacing:1.2px;color:#842d50}.brand small{display:block;color:#75696d;font-size:9px;font-weight:400;letter-spacing:.2px;margin-top:3px}.date{text-align:right;color:#75696d;font-size:10px}h1{font-size:23px;margin:17px 0 3px;letter-spacing:-.4px}.subtitle{color:#75696d;margin:0 0 14px}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0 13px}.metric{border:1px solid #ece5e5;border-top:2px solid #bd872d;border-radius:6px;padding:8px 10px}.metric span{display:block;color:#75696d;font-size:9px;text-transform:uppercase;letter-spacing:.4px}.metric strong{display:block;font-size:14px;margin-top:4px}.note{font-size:9px;color:#75696d;margin:5px 0 10px}table{width:100%;border-collapse:collapse;table-layout:fixed}thead{display:table-header-group}th{background:#842d50;color:#fff;text-align:left;padding:8px 7px;font-size:9px;text-transform:uppercase;letter-spacing:.35px}td{padding:7px;border-bottom:1px solid #ece5e5;vertical-align:top;overflow-wrap:anywhere}tbody tr:nth-child(even){background:#faf4f6}.num{width:4%;text-align:center}.money{text-align:right;width:12%;font-variant-numeric:tabular-nums}.due{color:#ad423d}.signature{width:12%;border-left:1px solid #ece5e5}.payments{width:21%}td small{display:block;color:#75696d;margin-top:2px}.empty{text-align:center;padding:24px;color:#75696d}.signatures{display:grid;grid-template-columns:1fr 1fr;gap:70px;margin:28px 8px 0;page-break-inside:avoid}.sign{border-top:1px solid #75696d;padding-top:7px;text-align:center;color:#75696d}.foot{border-top:1px solid #ece5e5;margin-top:15px;padding-top:7px;display:flex;justify-content:space-between;font-size:9px;color:#75696d}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}tr{break-inside:avoid}button{display:none}}
+</style></head><body><header class="masthead"><div class="brand">COMMISSION FINANCE — SECTION UIDT-EPT<small>DMWM · Moustarchidine Junior · Comité inter-universitaire · Conseil des établissements supérieurs de Thiès</small></div><div class="date">Document généré le ${esc(date)}<br>Année de participation : ${p.year}</div></header><main><h1>Liste des participants</h1><p class="subtitle">Participation annuelle ${p.year} · Montant attendu par membre : <strong>${F(p.amount)}</strong></p><section class="summary"><div class="metric"><span>Membres inscrits</span><strong>${rows.length}</strong></div><div class="metric"><span>Total attendu</span><strong>${F(total)}</strong></div><div class="metric"><span>Total encaissé</span><strong>${F(paid)}</strong></div><div class="metric"><span>Reste à recevoir</span><strong>${F(due)}</strong></div><div class="metric"><span>Soldés / partiels / impayés</span><strong>${settled} / ${partial} / ${unpaid}</strong></div></section><p class="note">Liste établie à partir des membres actuellement enregistrés. La colonne « Signature » peut être utilisée pour confirmer la réception.</p><table><thead><tr><th class="num">N°</th><th>Nom du membre et téléphone</th><th class="money">Montant attendu</th><th class="money">Total versé</th><th class="money">Solde restant</th><th class="payments">Historique des versements (date · montant)</th><th class="signature">Signature</th></tr></thead><tbody>${reportRows || `<tr><td colspan="7" class="empty">Aucun membre n’est enregistré.</td></tr>`}</tbody></table><section class="signatures"><div class="sign">Signature du trésorier / de la trésorière</div><div class="sign">Signature du président / de la présidente</div></section><footer class="foot"><span>Commission Finance — Section UIDT-EPT · Document interne DMWM</span><span>Participation annuelle ${p.year}</span></footer></main></body></html>`);
+            popup.document.close(); popup.document.title = `Liste des participants ${p.year} — ${ORG_NAME}`; const reportBrand = popup.document.querySelector(".brand"); if (reportBrand) reportBrand.firstChild.textContent = `${ORG_NAME.toLocaleUpperCase("fr")} — SECTION UIDT-EPT`; const reportFooter = popup.document.querySelector(".foot span"); if (reportFooter) reportFooter.textContent = `${ORG_NAME} — Document interne DMWM`; popup.focus(); setTimeout(() => popup.print(), 300);
+        }
+        function printManagementReport() {
+            const popup = window.open("", "_blank");
+            if (!popup) { notify("La fenêtre d’impression a été bloquée. Autorisez les fenêtres contextuelles pour créer le rapport.", "error"); return }
+            const transactions = txs(), receipts = transactions.filter(x => x.type === "r").reduce((sum, x) => sum + x.amt, 0), expenses = transactions.filter(x => x.type === "d").reduce((sum, x) => sum + x.amt, 0);
+            const members = [...S.members].sort((a, b) => a.name.localeCompare(b.name, "fr"));
+            const memberRows = members.map((m, i) => `<tr><td class="number">${i + 1}</td><td>${esc(m.name)}</td><td>${esc(m.tel || "—")}</td><td>${esc(m.position || "—")}</td><td>${m.joined ? esc(new Intl.DateTimeFormat("fr-FR").format(new Date(`${m.joined}T00:00:00`))) : "—"}</td></tr>`).join("");
+            const cashRows = transactions.map(tx => `<tr><td>${esc(new Intl.DateTimeFormat("fr-FR").format(new Date(`${tx.d}T00:00:00`)))}</td><td>${tx.type === "r" ? "Recette" : "Dépense"}</td><td>${esc(tx.label)}</td><td class="amount">${tx.type === "r" ? F(tx.amt) : "—"}</td><td class="amount">${tx.type === "d" ? F(tx.amt) : "—"}</td></tr>`).join("");
+            const eventRows = [...S.events].sort((a, b) => b.date.localeCompare(a.date)).map(event => {
+                const paid = Object.values(event.pay).reduce((sum, item) => sum + (+item.paid || 0), 0);
+                const present = Object.values(event.pay).filter(item => item.present).length;
+                return `<tr><td>${esc(event.name)}</td><td>${esc(event.date)}</td><td class="amount">${F(event.amount * members.length)}</td><td class="amount">${F(paid)}</td><td>${present} / ${members.length}</td></tr>`;
+            }).join("");
+            const annualRows = [...S.participations].sort((a, b) => b.year - a.year).map(p => {
+                const paid = Object.values(p.pay || {}).flat().reduce((sum, item) => sum + item.amount, 0);
+                const expected = p.amount * members.length;
+                return `<tr><td>${p.year}</td><td class="amount">${F(p.amount)}</td><td class="amount">${F(expected)}</td><td class="amount">${F(paid)}</td><td class="amount">${F(Math.max(0, expected - paid))}</td></tr>`;
+            }).join("");
+            const salesRows = S.projects.map(project => {
+                const quantity = project.sales.reduce((sum, sale) => sum + sale.qty, 0), revenue = quantity * project.price, cost = quantity * project.cost;
+                return `<tr><td>${esc(project.name)}</td><td class="amount">${quantity}</td><td class="amount">${F(revenue)}</td><td class="amount">${F(cost)}</td><td class="amount">${F(revenue - cost)}</td></tr>`;
+            }).join("");
+            popup.document.open();
+            popup.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rapport de gestion CTC</title><style>
+@page{size:A4 portrait;margin:16mm}*{box-sizing:border-box}body{margin:0;color:#2a2024;font:10px/1.45 Arial,Helvetica,sans-serif}.masthead{display:flex;justify-content:space-between;gap:18px;border-bottom:3px solid #842d50;padding-bottom:12px}.brand{color:#842d50;font-size:13px;font-weight:700}.brand small{display:block;color:#75696d;font-size:9px;font-weight:400;margin-top:4px}.date{text-align:right;color:#75696d;font-size:9px}h1{font-size:23px;margin:18px 0 2px}.subtitle{margin:0 0 16px;color:#75696d}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 20px}.metric{border:1px solid #ece5e5;border-top:2px solid #bd872d;border-radius:6px;padding:8px}.metric span{display:block;color:#75696d;font-size:8px;text-transform:uppercase}.metric strong{display:block;margin-top:4px;font-size:13px}section{margin-top:20px}h2{font-size:14px;margin:0 0 8px;padding-bottom:5px;border-bottom:1px solid #ece5e5;color:#842d50;break-after:avoid-page}table{width:100%;border-collapse:collapse;table-layout:auto}thead{display:table-header-group}th{background:#842d50;color:white;text-align:left;padding:7px 6px;font-size:8px;text-transform:uppercase}td{padding:6px;border-bottom:1px solid #ece5e5;vertical-align:top;overflow-wrap:anywhere}tbody tr:nth-child(even){background:#faf4f6}.number{text-align:center}.amount{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.empty{color:#75696d;text-align:center;padding:12px}.foot{border-top:1px solid #ece5e5;margin-top:22px;padding-top:8px;color:#75696d;font-size:8px;display:flex;justify-content:space-between}@media screen{body{max-width:900px;margin:24px auto;padding:24px;background:#fff;box-shadow:0 4px 24px #0001}}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}tr{break-inside:avoid}}
+</style></head><body><header class="masthead"><div class="brand">${esc(ORG_NAME.toLocaleUpperCase("fr"))}<small>Section UIDT-EPT · DMWM · Moustarchidine Junior · Thiès</small></div><div class="date">Rapport de synthèse<br>Généré le ${esc(generatedDate())}</div></header><main><h1>Rapport de gestion</h1><p class="subtitle">Situation des membres et des activités enregistrées dans l’espace CTC.</p><div class="summary"><div class="metric"><span>Membres enregistrés</span><strong>${members.length}</strong></div><div class="metric"><span>Recettes cumulées</span><strong>${F(receipts)}</strong></div><div class="metric"><span>Dépenses cumulées</span><strong>${F(expenses)}</strong></div><div class="metric"><span>Solde calculé</span><strong>${F(receipts - expenses)}</strong></div><div class="metric"><span>Événements suivis</span><strong>${S.events.length}</strong></div><div class="metric"><span>Projets de vente</span><strong>${S.projects.length}</strong></div></div><section><h2>Annuaire des membres</h2><table><thead><tr><th>N°</th><th>Nom complet</th><th>Téléphone</th><th>Fonction</th><th>Adhésion</th></tr></thead><tbody>${memberRows || `<tr><td colspan="5" class="empty">Aucun membre enregistré.</td></tr>`}</tbody></table></section><section><h2>Participations annuelles</h2><table><thead><tr><th>Année</th><th>Montant par membre</th><th>Total attendu</th><th>Total encaissé</th><th>Reste à recevoir</th></tr></thead><tbody>${annualRows || `<tr><td colspan="5" class="empty">Aucune participation enregistrée.</td></tr>`}</tbody></table></section><section><h2>Cotisations aux événements</h2><table><thead><tr><th>Événement</th><th>Date</th><th>Total attendu</th><th>Total encaissé</th><th>Présences</th></tr></thead><tbody>${eventRows || `<tr><td colspan="5" class="empty">Aucun événement enregistré.</td></tr>`}</tbody></table></section><section><h2>Projets de vente</h2><table><thead><tr><th>Projet</th><th>Quantité</th><th>Recettes</th><th>Coûts</th><th>Résultat</th></tr></thead><tbody>${salesRows || `<tr><td colspan="5" class="empty">Aucun projet enregistré.</td></tr>`}</tbody></table></section><section><h2>Journal de caisse</h2><table><thead><tr><th>Date</th><th>Type</th><th>Désignation</th><th>Recette</th><th>Dépense</th></tr></thead><tbody>${cashRows || `<tr><td colspan="5" class="empty">Aucun mouvement enregistré.</td></tr>`}</tbody></table></section><footer class="foot"><span>${esc(ORG_NAME)} · Document interne</span><span>Les chiffres reflètent les données présentes à la date d’édition.</span></footer></main></body></html>`);
+            popup.document.close(); popup.focus(); setTimeout(() => popup.print(), 300);
+        }
+        const ens = (e, m) => e.pay[m] = e.pay[m] || { paid: 0, present: false };
+        const upd = () => { save(); render() };
+        const applyParticipation = p => { const index = S.participations.findIndex(x => x.year === p.year); if (index < 0) S.participations.push(p); else S.participations[index] = p; base.participations[p.id] = JSON.stringify(p); render() };
+        const validDate = d => typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d) && Number.isFinite(Date.parse(d)) && new Date(d).toISOString().slice(0, 10) === d;
+        const PHONE_ERROR = "Entrez un numéro sénégalais valide : 9 chiffres, mobile en 70, 75, 76, 77 ou 78, ou fixe en 33. Exemple : +221 77 123 45 67.";
+        function normalizeSenegalPhone(value) {
+            if (typeof value !== "string") return null;
+            const input = value.trim(); if (!input) return "";
+            if (!/^\+?[0-9 ().-]+$/.test(input)) return null;
+            let digits = input.replace(/\D/g, "");
+            if (digits.startsWith("00221") && digits.length === 14) digits = digits.slice(5);
+            else if (digits.startsWith("221") && digits.length === 12) digits = digits.slice(3);
+            if (!/^(?:33|70|75|76|77|78)[0-9]{7}$/.test(digits)) return null;
+            return `+221 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 7)} ${digits.slice(7)}`;
+        }
+        const invalidAnnualBackup = o => {
+            if (!Number.isSafeInteger(o.year) || o.year < 2000 || o.year > new Date().getFullYear() + 1 || o.id !== `participation${o.year}` || !Number.isSafeInteger(o.amount) || o.amount < 1 || !o.pay || typeof o.pay !== "object" || Array.isArray(o.pay)) return true;
+            return Object.entries(o.pay).some(([memberId, payments]) => { if (!/^[A-Za-z0-9]{1,80}$/.test(memberId) || !Array.isArray(payments)) return true; const ids = new Set(); let total = 0; return payments.some(x => { if (!x || !/^[A-Za-z0-9]{1,80}$/.test(x.id || "") || ids.has(x.id) || !Number.isSafeInteger(x.amount) || x.amount < 1 || !validDate(x.date)) return true; ids.add(x.id); total += x.amount; return !Number.isSafeInteger(total) || total > o.amount }) });
+        };
+        function backupError(data) {
+            if (!data || typeof data !== "object" || !["members", "events", "projects", "ledger"].every(c => Array.isArray(data[c])) || (data.participations !== undefined && !Array.isArray(data.participations))) return "Cette sauvegarde ne contient pas toutes les listes attendues.";
+            if (data.participations === undefined) data.participations = [];
+            for (const c of COLS) {
+                const ids = new Set(); for (const o of data[c]) {
+                    if (!o || typeof o !== "object" || Array.isArray(o) || typeof o.id !== "string" || !/^[A-Za-z0-9]{1,80}$/.test(o.id) || ids.has(o.id) || new TextEncoder().encode(JSON.stringify(o)).length > 900000) return "Une fiche de la sauvegarde est invalide, dupliquée ou trop volumineuse."; ids.add(o.id);
+                    if (c == "members" && (typeof o.name !== "string" || o.name.trim().length < 2 || o.name.trim().length > 80 || (o.tel && (typeof o.tel !== "string" || normalizeSenegalPhone(o.tel) === null || o.tel.length > 24)) || (o.position != null && o.position !== "" && (typeof o.position !== "string" || o.position.trim().length < 2 || o.position.trim().length > 80 || /[\u0000-\u001f\u007f]/.test(o.position))) || (o.joined != null && o.joined !== "" && !validDate(o.joined)))) return "Un membre de la sauvegarde contient un nom, un numéro sénégalais, une fonction ou une date d’adhésion invalide.";
+                    if (c == "events" && (typeof o.name !== "string" || o.name.trim().length < 2 || o.name.trim().length > 100 || !validDate(o.date) || !Number.isSafeInteger(o.amount) || o.amount < 1 || !o.pay || typeof o.pay !== "object" || Array.isArray(o.pay) || Object.entries(o.pay).some(([id, p]) => !/^[A-Za-z0-9]{1,80}$/.test(id) || !p || !Number.isSafeInteger(p.paid) || p.paid < 0 || p.paid > o.amount || typeof p.present !== "boolean"))) return "Une cotisation ou un règlement de la sauvegarde est invalide.";
+                    if (c == "projects" && (typeof o.name !== "string" || o.name.trim().length < 2 || o.name.trim().length > 100 || !Number.isSafeInteger(o.price) || o.price < 1 || !Number.isSafeInteger(o.cost) || o.cost < 0 || !Array.isArray(o.sales) || o.sales.some(s => !s || !/^[A-Za-z0-9]{1,80}$/.test(s.id || "") || !/^[A-Za-z0-9]{1,80}$/.test(s.mid || "") || !Number.isSafeInteger(s.qty) || s.qty < 1 || !validDate(s.date)))) return "Un projet ou une vente de la sauvegarde est invalide.";
+                    if (c == "ledger" && (!["r", "d"].includes(o.type) || typeof o.label !== "string" || o.label.trim().length < 2 || o.label.trim().length > 140 || !validDate(o.date) || !Number.isSafeInteger(o.amount) || o.amount < 1)) return "Un mouvement de caisse de la sauvegarde est invalide.";
+                    if (c == "participations" && invalidAnnualBackup(o)) return "Une participation annuelle ou un versement de la sauvegarde est invalide.";
+                }
+            }
+            return "";
+        }
+        document.addEventListener("toggle", e => { const id = e.target.dataset && e.target.dataset.id; if (id) ui.open[id] = e.target.open }, true);
+        document.addEventListener("input", e => {
+            if (e.target.matches("#fm [name=tel]")) { e.target.setCustomValidity(e.target.value.trim() && normalizeSenegalPhone(e.target.value) === null ? PHONE_ERROR : ""); return }
+            if (!e.target.matches("[data-member-search]")) return;
+            const query = e.target.value.trim().toLocaleLowerCase("fr"), digits = query.replace(/\D/g, "").replace(/^(?:00221|221)/, ""), rows = [...document.querySelectorAll("[data-member-row]")]; let visible = 0;
+            for (const row of rows) { const match = row.dataset.memberName.includes(query) || Boolean(digits && row.dataset.memberPhone.includes(digits)); row.hidden = !match; if (match) visible++ }
+            const empty = document.getElementById("member-search-empty"); if (empty) empty.hidden = visible > 0
+        });
+        document.addEventListener("focusout", e => {
+            if (!e.target.matches("#fm [name=tel]")) return;
+            const normalized = normalizeSenegalPhone(e.target.value);
+            e.target.setCustomValidity(e.target.value.trim() && normalized === null ? PHONE_ERROR : "");
+            if (normalized) e.target.value = normalized;
+        });
+        document.addEventListener("click", async e => {
+            const t = e.target.closest("[data-t]"); if (t) { ui.tab = t.dataset.t; return render() }
+            const b = e.target.closest("button[data-a]"); if (!b) return; const d = b.dataset, a = d.a;
+            if (a == "profile") { openMemberProfile(d.i); return }
+            if (a == "closeProfile") { document.getElementById("member-dialog").close(); return }
+            if (a == "annualPrint" || a == "annualCsv") { const p = S.participations.find(x => x.year == d.y); if (!p) { notify("La participation sélectionnée n’est plus disponible. Actualisez la page.", "error"); return } if (a == "annualPrint") printAnnualReport(p); else { downloadAnnualCsv(p); notify(`La liste des participants ${p.year} a été téléchargée.`) } return }
+            if (a == "annualPay" || a == "annualFull") { const p = S.participations.find(x => x.year == d.y), row = b.closest("tr"), input = row && row.querySelector('[data-a="annualAmount"]'), dateInput = row && row.querySelector('[data-a="annualDate"]'), amount = a == "annualFull" ? Number(input && input.max) : Number(input && input.value), dateValue = dateInput && dateInput.value; if (!Number.isSafeInteger(amount) || amount < 1 || !validDate(dateValue)) { notify("Vérifiez le montant et la date du versement.", "error"); return } b.disabled = true; try { const result = await api("POST", `/api/participations/${d.y}/payments`, { memberId: d.m, amount, date: dateValue }); applyParticipation(result.participation); notify(`Versement de ${F(amount)} enregistré.`) } catch (x) { notify(x.message, "error"); b.disabled = false } return }
+            if (a == "annualDelPayment") { if (!confirm("Retirer ce versement ? La recette correspondante sera aussi retirée de la caisse.")) return; b.disabled = true; try { const result = await api("DELETE", `/api/participations/${d.y}/payments/${d.p}`, { memberId: d.m }); applyParticipation(result.participation); notify("Le versement a été retiré.") } catch (x) { notify(x.message, "error"); b.disabled = false } return }
+            if (a == "annualDelete") { const p = S.participations.find(x => x.year == d.y); if (!p || !confirm(`Supprimer la participation ${p.year} et tout son historique de versements ? Les recettes correspondantes seront retirées de la caisse.`)) return; b.disabled = true; try { await api("DELETE", `/api/participations/${d.y}`); S.participations = S.participations.filter(x => x.year != d.y); delete base.participations[p.id]; render(); notify(`La participation ${d.y} a été supprimée.`) } catch (x) { notify(x.message, "error"); b.disabled = false } return }
+            if (a == "delM" && confirm("Retirer ce membre ?")) { S.members = S.members.filter(m => m.id != d.i) }
+            else if (a == "delE" && confirm("Supprimer cet événement ?")) { S.events = S.events.filter(x => x.id != d.i) }
+            else if (a == "delP" && confirm("Supprimer ce projet ?")) { S.projects = S.projects.filter(x => x.id != d.i) }
+            else if (a == "delS") { const p = S.projects.find(x => x.id == d.i); p.sales = p.sales.filter(s => s.id != d.s) }
+            else if (a == "delL") { S.ledger = S.ledger.filter(x => x.id != d.i) }
+            else if (a == "full") { const ev = S.events.find(x => x.id == d.e); ens(ev, d.m).paid = ev.amount }
+            else if (a == "exp") { dl("commission-finance.json", JSON.stringify(S, null, 2), "application/json"); notify("La sauvegarde a été téléchargée."); return }
+            else if (a == "membersCsv") { downloadMembersCsv(); notify("L’annuaire des membres a été téléchargé au format CSV."); return }
+            else if (a == "csv") { downloadCashCsv(); notify("Le journal de caisse a été téléchargé au format CSV."); return }
+            else if (a == "reportPrint") { printManagementReport(); return }
+            else return; upd()
+        });
+        document.addEventListener("change", e => {
+            const t = e.target;
+            if (t.id == "profile-photo" || t.name == "photoFile") {
+                const file = t.files[0];
+                if (!file) return;
+                resizeProfilePhoto(file).then(photo => {
+                    if (t.id == "profile-photo") {
+                        pendingProfilePhoto = photo;
+                        document.getElementById("profile-photo-preview").innerHTML = `<img class="user-avatar" src="${photo}" alt="Aperçu de la photo">`;
+                    }
+                    const setupPreview = document.getElementById("setup-photo-preview"); if (setupPreview) setupPreview.innerHTML = `<img class="user-avatar" src="${photo}" alt="Aperçu de la photo">`;
+                    if (t.name == "photoFile" && document.getElementById("fu")) { const preview = document.getElementById("fu-photo-preview"); if (preview) preview.innerHTML = `<img class="user-avatar" src="${photo}" alt="Aperçu de la photo">` }
+                }).catch(x => notify(x.message, "error"));
+                return;
+            }
+            const d = t.dataset; if (!d.a) return;
+            if (d.a == "year") { ui.year = +t.value; return render() }
+            if (d.a == "imp") { const f = t.files[0]; if (!f) return; f.text().then(x => { try { const j = JSON.parse(x), error = backupError(j); if (error) throw new Error(error); if (!confirm("La restauration remplacera les données existantes. Continuer ?")) return; S = j; upd(); notify("La sauvegarde a été vérifiée et sa restauration a commencé.") } catch (err) { notify(err.message || "Fichier de sauvegarde invalide.", "error") } finally { t.value = "" } }); return }
+            const ev = S.events.find(x => x.id == d.e); if (!ev) return;
+            if (d.a == "paid") { const amount = Number(t.value); if (!Number.isSafeInteger(amount) || amount < 0 || amount > ev.amount) { t.value = String(ev.pay[d.m]?.paid || 0); notify(`Le règlement doit être un nombre entier compris entre 0 et ${F(ev.amount)}.`, "error"); return } ens(ev, d.m).paid = amount } if (d.a == "pres") ens(ev, d.m).present = t.checked; upd()
+        });
+        document.addEventListener("submit", e => {
+            e.preventDefault(); const f = e.target, v = Object.fromEntries(new FormData(f));
+            if (f.id == "fm") {
+                const phone = normalizeSenegalPhone(v.tel);
+                if (v.tel.trim() && phone === null) { f.elements.tel.setCustomValidity(PHONE_ERROR); f.elements.tel.reportValidity(); return }
+                S.members.push({ id: uid(), ts: Date.now(), name: v.name.trim(), tel: phone, position: v.position.trim(), joined: v.joined });
+            }
+            else if (f.id == "fannual") { const year = Number(v.year), amount = Number(v.amount); if (S.participations.some(p => p.year === year)) return notify(`Une participation pour ${year} existe déjà.`, "error"); if (!Number.isSafeInteger(year) || year < 2000 || year > new Date().getFullYear() + 1 || !Number.isSafeInteger(amount) || amount < 1) return notify("Vérifiez l’année et le montant de la participation.", "error"); const id = `participation${year}`; S.participations.push({ id, year, amount, pay: {} }); ui.open[`annual-${year}`] = true; notify(`La participation annuelle ${year} a été créée.`) }
+            else if (f.id == "fe") S.events.unshift({ id: uid(), name: v.name.trim(), date: v.date, amount: +v.amount, pay: {} });
+            else if (f.id == "fp") S.projects.unshift({ id: uid(), ts: Date.now(), name: v.name.trim(), price: +v.price, cost: +v.cost || 0, sales: [] });
+            else if (f.id == "fl") S.ledger.push({ id: uid(), type: v.type, label: v.label.trim(), date: v.date, amount: +v.amount });
+            else if (f.dataset.p) { if (!v.mid) return notify("Ajoutez d’abord un membre avant d’enregistrer une vente.", "error"); S.projects.find(p => p.id == f.dataset.p).sales.push({ id: uid(), mid: v.mid, qty: +v.qty, date: v.date || today() }) }
+            upd()
+        });
+        let ME = null, USERS = [], AUD = [], inflight = 0, pendingProfilePhoto = null;
+        const api = async (m, u, b) => { const r = await fetch(u, { method: m, headers: b ? { "Content-Type": "application/json" } : {}, body: b ? JSON.stringify(b) : undefined }); const j = await r.json().catch(() => ({})); if (!r.ok) { const e = new Error(j.error || "Erreur"); e.status = r.status; e.data = j; throw e } return j };
+        const L = {};
+        db = { collection: c => ({ doc: id => ({ set: d => { inflight++; return api("PUT", "/api/doc/" + c + "/" + id, d).finally(() => inflight--) }, delete: () => { inflight++; return api("DELETE", "/api/doc/" + c + "/" + id).finally(() => inflight--) } }), onSnapshot: fn => { L[c] = fn } }) };
+        let syncWarning = false;
+        async function poll() {
+            if (inflight) return;
+            try {
+                const s = await api("GET", "/api/state"), wasAvailable = participationApiAvailable;
+                syncWarning = false; participationApiAvailable = Array.isArray(s.participations);
+                COLS.forEach(c => {
+                    const rows = s[c];
+                    if (Array.isArray(rows)) { if (L[c]) L[c]({ docs: rows.map(o => ({ data: () => o })) }) }
+                    else if (c == "participations") S.participations = [];
+                    else throw new Error(`Collection absente de la synchronisation : ${c}.`);
+                });
+                if (wasAvailable !== participationApiAvailable && ui.tab == "annual") render();
+                if (ME.role == "admin" && ui.tab == "eq" && !(document.activeElement && document.activeElement.tagName == "INPUT")) await loadEq()
+            } catch (e) {
+                if (e.status == 401) location.reload();
+                else if (!syncWarning) { syncWarning = true; notify(e.message || "La synchronisation est momentanément interrompue. Vérifiez votre connexion.", "error") }
+            }
+        }
+        async function loadEq() { USERS = await api("GET", "/api/users"); AUD = await api("GET", "/api/audit"); render() }
+        const _t = document.getElementById("nav"); _t.addEventListener("click", e => { if (e.target.dataset.t == "eq" && ME && ME.role == "admin") loadEq().catch(x => notify(x.message, "error")) });
+        function loginView(setup) {
+            const nav = document.getElementById("nav");
+            nav.hidden = false;
+            nav.className = "landing-nav";
+            nav.setAttribute("aria-label", "Navigation principale");
+            nav.innerHTML = '<a href="#accueil">Accueil</a><a href="#missions">Nos missions</a><a href="#services">Espace de gestion</a><a href="#fonctionnement">Fonctionnement</a><a href="#connexion">Connexion</a>';
+            document.getElementById("app").innerHTML = `<div class="landing-shell">
+<section class="landing-hero" id="accueil" aria-labelledby="landing-title">
+<div class="landing-intro">
+<div class="landing-eyebrow">Section UIDT-EPT &middot; DMWM</div>
+<h2 id="landing-title">La tr&eacute;sorerie et la capacitation au service d&rsquo;une <span>commission organis&eacute;e.</span></h2>
+<p class="landing-lead">Bienvenue dans l&rsquo;espace de la Commission Tr&eacute;sorerie et Capacitation. Retrouvez les outils de suivi des membres, des participations et des activit&eacute;s de la section.</p>
+<div class="landing-hero-actions"><a class="b" href="#connexion">${setup ? "Cr\u00e9er l\u2019acc\u00e8s administrateur" : "Acc\u00e9der \u00e0 mon espace"}</a><a class="g" href="#missions">D&eacute;couvrir la CTC</a></div>
+<div class="landing-identity">Comit&eacute; inter-universitaire &middot; Moustarchidine Junior &middot; Thi&egrave;s</div>
+</div>
+<section class="card landing-auth" id="connexion" aria-labelledby="auth-title"><div class="landing-secure"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></svg>Acc&egrave;s r&eacute;serv&eacute; aux membres autoris&eacute;s</div><h2 id="auth-title">${setup ? "Premi&egrave;re configuration" : "Connexion &agrave; votre espace"}</h2><p>${setup ? "Cr&eacute;ez le compte administrateur de la commission pour commencer." : "Connectez-vous avec le compte qui vous a &eacute;t&eacute; attribu&eacute;."}</p><form id="fa"><p class="field-key"><span class="req">*</span> Champs obligatoires${setup ? " &middot; Mot de passe de 8 &agrave; 128 caract&egrave;res." : ""}</p><label>Nom d&rsquo;utilisateur <span class="req" aria-hidden="true">*</span><input name="name" autocomplete="username" minlength="2" maxlength="80" required placeholder="Votre nom de compte"></label><label>Mot de passe <span class="req" aria-hidden="true">*</span><input name="password" type="password" required minlength="${setup ? 8 : 1}" maxlength="128" autocomplete="${setup ? "new-password" : "current-password"}" placeholder="${setup ? "8 caract&egrave;res minimum" : "Votre mot de passe"}">${setup ? '<small class="hint">Choisissez un mot de passe personnel et gardez-le confidentiel.</small>' : ""}</label>${setup ? '<div class="profile-photo-form"><div id="setup-photo-preview"></div><div><label>Photo de profil (optionnelle)<input name="photoFile" type="file" accept="image/jpeg,image/png,image/webp"></label><small class="hint">JPEG, PNG ou WebP, 5 Mo maximum.</small></div></div>' : ""}<div id="er" class="bad" role="alert"></div><button class="b">${setup ? "Cr\u00e9er le compte administrateur" : "Se connecter"}</button></form><p class="auth-help">${setup ? "Cette premi&egrave;re &eacute;tape cr&eacute;e l&rsquo;acc&egrave;s administrateur initial. Vous pourrez ensuite ajouter les comptes de l&rsquo;&eacute;quipe." : "Besoin d&rsquo;un acc&egrave;s ? Contactez l&rsquo;administrateur de la commission."}</p></section>
+</section>
+<section class="landing-section" id="missions" aria-labelledby="missions-title"><div class="landing-section-heading"><div class="landing-eyebrow">La CTC en bref</div><h2 id="missions-title">Une commission au service de la gestion et des membres</h2><p>Un cadre pour suivre les ressources de la section et renforcer la participation responsable de chacun.</p></div><div class="landing-mission-grid"><article class="landing-mission"><span class="landing-mission-number">01 &middot; TR&Eacute;SORERIE</span><h3>Suivre les ressources avec rigueur</h3><p>Tenir &agrave; jour les recettes, les d&eacute;penses et les op&eacute;rations afin de disposer d&rsquo;une vision claire de la caisse.</p></article><article class="landing-mission"><span class="landing-mission-number">02 &middot; PARTICIPATION</span><h3>Favoriser la transparence collective</h3><p>Organiser le suivi des participations et des cotisations, avec un historique consultable par les personnes habilit&eacute;es.</p></article><article class="landing-mission"><span class="landing-mission-number">03 &middot; CAPACITATION</span><h3>Encourager l&rsquo;autonomie des membres</h3><p>Accompagner la compr&eacute;hension des responsabilit&eacute;s et des pratiques de gestion au sein de la commission.</p></article></div></section>
+<section class="landing-section" id="services" aria-labelledby="services-title"><div class="landing-section-heading"><div class="landing-eyebrow">Les outils disponibles</div><h2 id="services-title">Un espace de gestion simple et centralis&eacute;</h2><p>Les fonctions de l&rsquo;application facilitent le suivi courant des activit&eacute;s de la CTC.</p></div><div class="landing-service-grid"><article class="landing-service"><span class="landing-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 19v-1.5a5.5 5.5 0 0 1 11 0V19zM16 5.5a3 3 0 0 1 0 5.8m2 3a4.5 4.5 0 0 1 2.5 4.1V19h-3"/></svg></span><h3>Membres</h3><p>Annuaire consultable, profils et informations d&rsquo;activit&eacute;.</p></article><article class="landing-service"><span class="landing-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 10h16m-11 4h2m3 0h2m-7 4h2"/></svg></span><h3>Participations</h3><p>Suivi annuel des versements, des paiements partiels et des soldes.</p></article><article class="landing-service"><span class="landing-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M7 15l4-4 3 2 6-7"/><path d="M16 6h4v4"/></svg></span><h3>Cotisations et ventes</h3><p>Gestion des cotisations &eacute;v&eacute;nementielles et des projets de vente.</p></article><article class="landing-service"><span class="landing-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18m-14 5h4M7 6V4h10v2"/></svg></span><h3>Caisse et rapports</h3><p>Consultation des mouvements, sauvegarde et exports de suivi.</p></article></div></section>
+<section class="landing-section" id="fonctionnement" aria-labelledby="steps-title"><div class="landing-section-heading"><div class="landing-eyebrow">Prise en main</div><h2 id="steps-title">Un acc&egrave;s adapt&eacute; &agrave; chaque responsabilit&eacute;</h2><p>Les droits du compte d&eacute;terminent les op&eacute;rations accessibles dans l&rsquo;espace.</p></div><div class="landing-steps"><article class="landing-step"><h3>Connectez-vous</h3><p>Utilisez les identifiants cr&eacute;&eacute;s pour vous ou remis par l&rsquo;administrateur.</p></article><article class="landing-step"><h3>Consultez votre espace</h3><p>Retrouvez les membres, les suivis annuels, les activit&eacute;s et la situation de caisse.</p></article><article class="landing-step"><h3>Agissez selon vos droits</h3><p>Les comptes administrateur et tr&eacute;sorier g&egrave;rent les donn&eacute;es ; le r&ocirc;le lecteur permet leur consultation.</p></article></div></section>
+<section class="landing-access" aria-labelledby="access-title"><div><h2 id="access-title">Un espace interne, des acc&egrave;s ma&icirc;tris&eacute;s</h2><p>Les informations de la commission sont accessibles apr&egrave;s authentification, selon le r&ocirc;le attribu&eacute; &agrave; chaque utilisateur. Pour demander un compte, contactez l&rsquo;administrateur.</p></div><a class="b" href="#connexion">${setup ? "Configurer l&rsquo;espace" : "Se connecter"}</a></section>
+<footer class="landing-footer"><div><strong>${ORG_NAME}</strong><p>Section UIDT-EPT &middot; DMWM &middot; Moustarchidine Junior &middot; Thi&egrave;s</p><p>Outil interne de suivi des membres et des activit&eacute;s de la commission.</p></div><div class="landing-footer-links"><a href="#accueil">Accueil</a><a href="#missions">Missions</a><a href="#services">Outils de gestion</a><a href="#connexion">Connexion</a></div><div class="landing-footer-links"><span>Acc&egrave;s r&eacute;serv&eacute; aux utilisateurs autoris&eacute;s</span></div></footer>
+</div>`;
+            const pageFooter = document.querySelector(".landing-footer"); if (pageFooter) document.getElementById("site-footer").replaceChildren(pageFooter);
+            applyOrganizationBranding();
+            document.getElementById("fa").onsubmit = async ev => {
+                ev.preventDefault(); ev.stopImmediatePropagation();
+                const form = ev.target, v = Object.fromEntries(new FormData(form)), button = form.querySelector("button");
+                button.disabled = true; button.textContent = "Connexion\u2026";
+                try {
+                    if (setup) v.photo = v.photoFile && v.photoFile.size ? await resizeProfilePhoto(v.photoFile) : null;
+                    delete v.photoFile;
+                    await api("POST", setup ? "/api/setup" : "/api/login", v); location.reload();
+                } catch (x) {
+                    document.getElementById("er").textContent = x.message;
+                    button.disabled = false; button.textContent = setup ? "Cr\u00e9er le compte administrateur" : "Se connecter";
+                }
+            };
+        }
+        document.addEventListener("click", async e => {
+            const b = e.target.closest("[data-a=delU]"); if (b && confirm("Supprimer ce compte ?")) { try { await api("DELETE", "/api/users/" + b.dataset.i); await loadEq(); notify("Le compte a été supprimé.") } catch (x) { notify(x.message, "error") } }
+            if (e.target.closest("#change-password")) { const form = document.getElementById("password-form"); form.reset(); document.getElementById("password-error").textContent = ""; pendingProfilePhoto = null; document.getElementById("profile-photo").value = ""; document.getElementById("profile-photo-preview").innerHTML = userAvatar(ME.name, ME.photo); document.getElementById("password-dialog").showModal() }
+            if (e.target.closest("[data-a=closePassword]")) document.getElementById("password-dialog").close();
+            if (e.target.id == "out") { try { await api("POST", "/api/logout", {}); location.reload() } catch (x) { notify(x.message, "error") } }
+        });
+        const profilePhotoStatus = document.getElementById("profile-photo-status");
+        document.getElementById("save-profile-photo").addEventListener("click", async e => {
+            const button = e.currentTarget;
+            button.disabled = true;
+            profilePhotoStatus.textContent = "";
+            try {
+                if (!pendingProfilePhoto) throw new Error("Choisissez d’abord une photo.");
+                await api("POST", "/api/me/photo", { photo: pendingProfilePhoto });
+                ME.photo = pendingProfilePhoto;
+                pendingProfilePhoto = null;
+                document.getElementById("profile-photo-preview").innerHTML = userAvatar(ME.name, ME.photo);
+                refreshWho();
+                profilePhotoStatus.textContent = "Photo enregistrée avec succès.";
+            } catch (x) {
+                profilePhotoStatus.textContent = `Échec de l’enregistrement : ${x.message}`;
+            } finally { button.disabled = false }
+        });
+        document.getElementById("remove-profile-photo").addEventListener("click", async e => {
+            const button = e.currentTarget;
+            button.disabled = true;
+            profilePhotoStatus.textContent = "";
+            try {
+                await api("POST", "/api/me/photo", { photo: null });
+                ME.photo = null;
+                pendingProfilePhoto = null;
+                document.getElementById("profile-photo").value = "";
+                document.getElementById("profile-photo-preview").innerHTML = userAvatar(ME.name, null);
+                refreshWho();
+                profilePhotoStatus.textContent = "Photo retirée avec succès.";
+            } catch (x) {
+                profilePhotoStatus.textContent = `Échec de la suppression : ${x.message}`;
+            } finally { button.disabled = false }
+        });
+        document.addEventListener("submit", async e => {
+            if (e.target.id == "password-form") {
+                e.preventDefault(); e.stopImmediatePropagation();
+                const form = e.target, values = Object.fromEntries(new FormData(form)), button = form.querySelector('[type="submit"]'), error = document.getElementById("password-error");
+                if (values.newPassword !== values.confirmPassword) { error.textContent = "La confirmation ne correspond pas au nouveau mot de passe."; form.elements.confirmPassword.focus(); return }
+                button.disabled = true; error.textContent = "";
+                try {
+                    await api("POST", "/api/me/password", { currentPassword: values.currentPassword, newPassword: values.newPassword });
+                    form.reset(); document.getElementById("password-dialog").close(); notify("Votre mot de passe a été modifié. Vos autres sessions ont été déconnectées.")
+                } catch (x) { error.textContent = x.message }
+                finally { button.disabled = false }
+                return
+            }
+            if (e.target.id != "fu") return;
+            e.preventDefault(); e.stopImmediatePropagation();
+            const form = e.target, v = Object.fromEntries(new FormData(form)), button = form.querySelector("button");
+            button.disabled = true; button.textContent = "Création du compte…";
+            try {
+                v.photo = v.photoFile && v.photoFile.size ? await resizeProfilePhoto(v.photoFile) : null;
+                delete v.photoFile;
+                await api("POST", "/api/users", v);
+                await loadEq();
+                form.reset();
+                notify("Le compte a bien été créé.");
+            }
+            catch (x) { notify(x.message, "error") }
+            finally { button.disabled = false; button.textContent = "Créer le compte" }
+        }, true);
+        function refreshWho() {
+            if (!ME) return;
+            const roles = { admin: "Administrateur", tresorier: "Trésorier", lecteur: "Lecteur" };
+            document.getElementById("who").innerHTML = userAvatar(ME.name, ME.photo) +
+                `<span>${esc(ME.name)} · ${roles[ME.role]}</span>` +
+                ' <button class="g" id="change-password" aria-haspopup="dialog" aria-controls="password-dialog">Mon compte</button>' +
+                ' <button class="g" id="out">Déconnexion</button>';
+        }
+        (async () => {
+            try { ME = await api("GET", "/api/me") } catch (x) { return loginView(x.data && x.data.setup) }
+            applyOrganizationBranding();
+            document.getElementById("site-footer").replaceChildren();
+            document.getElementById("nav").hidden = false; document.getElementById("nav").className = ""; document.getElementById("nav").setAttribute("aria-label", "Navigation principale");
+            refreshWho();
+            document.getElementById("st").textContent = "Données partagées sur le serveur de la commission";
+            if (!WR(ME.role)) document.body.classList.add("ro");
+            S = { members: [], events: [], projects: [], ledger: [], participations: [] };
+            COLS.forEach(c => db.collection(c).onSnapshot(sn => {
+                S[c] = sn.docs.map(d => JSON.parse(JSON.stringify(d.data()))); base[c] = Object.assign(Object.create(null), Object.fromEntries(S[c].map(o => [o.id, JSON.stringify(o)])));
+                if (c == "events") S[c].sort((a, b) => b.date.localeCompare(a.date)); else S[c].sort((a, b) => (b.ts || 0) - (a.ts || 0)); if (c == "members") S[c].reverse();
+                const a = document.activeElement; if (!(a && /INPUT|SELECT/.test(a.tagName) && a.type != "checkbox" && a.type != "file")) render()
+            }));
+            await poll(); setInterval(poll, 8000)
+        })();
+        const WR = r => r == "admin" || r == "tresorier";
+    </script>
+</body>
+
+</html>

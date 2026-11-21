@@ -1,0 +1,1 @@
+{"name":"commission-finance","version":"1.0.0","private":true,"scripts":{"start":"node --disable-warning=ExperimentalWarning server.js"},"engines":{"node":">=22.5"}}
