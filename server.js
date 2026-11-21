@@ -161,6 +161,18 @@ const server = http.createServer(async (req, res) => {
   res.setHeader("Referrer-Policy", "same-origin");
   try {
     if (req.method === "GET" && !p.startsWith("/api/")) {
+      if (p === "/manifest.webmanifest") {
+        res.writeHead(200, { "Content-Type": "application/manifest+json; charset=utf-8", "Cache-Control": "no-cache" });
+        return res.end(fs.readFileSync(path.join(__dirname, "public", "manifest.webmanifest")));
+      }
+      if (p === "/service-worker.js") {
+        res.writeHead(200, { "Content-Type": "text/javascript; charset=utf-8", "Cache-Control": "no-cache", "Service-Worker-Allowed": "/" });
+        return res.end(fs.readFileSync(path.join(__dirname, "public", "service-worker.js")));
+      }
+      if (p === "/icon.svg") {
+        res.writeHead(200, { "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "public, max-age=86400" });
+        return res.end(fs.readFileSync(path.join(__dirname, "public", "icon.svg")));
+      }
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(fs.readFileSync(path.join(__dirname, "public", "index.html")));
     }

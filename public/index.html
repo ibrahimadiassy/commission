@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#842d50">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <meta name="description"
         content="Espace de gestion de la Commission Trésorerie et Capacitation (CTC) de la Section UIDT-EPT, DMWM.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1361,7 +1363,111 @@
             color: #fff
         }
 
+        .install-notice {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            max-width: 1152px;
+            margin: 12px auto 0;
+            padding: 14px 18px;
+            border: 1px solid color-mix(in srgb, var(--gold) 36%, var(--line));
+            border-radius: 14px;
+            background: linear-gradient(110deg, var(--card), var(--gold-soft));
+            box-shadow: var(--shadow)
+        }
+
+        .install-notice[hidden] {
+            display: none
+        }
+
+        .install-notice-icon {
+            display: grid;
+            flex: 0 0 42px;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            border-radius: 12px;
+            background: var(--ac-soft);
+            color: var(--ac)
+        }
+
+        .install-notice-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        .install-notice-copy {
+            flex: 1;
+            min-width: 0
+        }
+
+        .install-notice-copy strong {
+            display: block;
+            color: var(--ink);
+            font-size: 14px
+        }
+
+        .install-notice-copy p {
+            margin: 2px 0 0;
+            color: var(--mut);
+            font-size: 12px;
+            line-height: 1.4
+        }
+
+        .install-notice-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 0 0 auto
+        }
+
+        .install-notice-actions button {
+            font: inherit;
+            cursor: pointer
+        }
+
+        .install-notice-actions .install-dismiss {
+            border: 0;
+            border-radius: 8px;
+            padding: 8px 10px;
+            background: transparent;
+            color: var(--mut);
+            font-size: 12px
+        }
+
+        .install-notice-actions .install-dismiss:hover {
+            background: var(--ac-soft);
+            color: var(--ac)
+        }
+
         @media(max-width:640px) {
+            .install-notice {
+                align-items: flex-start;
+                gap: 10px;
+                margin: 10px 12px 0;
+                padding: 12px
+            }
+
+            .install-notice-icon {
+                flex-basis: 36px;
+                width: 36px;
+                height: 36px
+            }
+
+            .install-notice-actions {
+                flex-direction: column-reverse;
+                align-items: stretch
+            }
+
+            .install-notice-actions .install-dismiss {
+                padding: 5px
+            }
+
             header {
                 padding: 12px 12px 14px;
                 margin-top: 8px
@@ -1643,6 +1749,19 @@
         <div id="who" class="k"></div>
     </header>
     <nav id="nav" aria-label="Navigation principale"></nav>
+    <aside id="install-notice" class="install-notice" aria-label="Installer l’application CTC" aria-live="polite" hidden>
+        <span class="install-notice-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 7v7m-3-3 3 3 3-3m-6 7h6"/></svg>
+        </span>
+        <div class="install-notice-copy">
+            <strong>Installer CTC sur cet appareil</strong>
+            <p id="install-notice-message">Retrouvez l’espace de la commission dans une fenêtre dédiée, comme une application.</p>
+        </div>
+        <div class="install-notice-actions">
+            <button type="button" class="b" id="install-app" hidden>Installer</button>
+            <button type="button" class="install-dismiss" id="dismiss-install">Plus tard</button>
+        </div>
+    </aside>
     <main id="app" aria-live="polite">
         <div class="card">Chargement de votre espace…</div>
     </main>
@@ -2163,6 +2282,74 @@ ${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row
             await poll(); setInterval(poll, 8000)
         })();
         const WR = r => r == "admin" || r == "tresorier";
+    </script>
+    <script>
+        (() => {
+            const notice = document.getElementById("install-notice");
+            const installButton = document.getElementById("install-app");
+            const message = document.getElementById("install-notice-message");
+            const isInstalled = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+            let installPrompt = null;
+
+            const hideNotice = () => { notice.hidden = true };
+            const showNotice = () => {
+                if (!isInstalled() && window.isSecureContext && "serviceWorker" in navigator) notice.hidden = false;
+            };
+
+            window.addEventListener("beforeinstallprompt", event => {
+                event.preventDefault();
+                installPrompt = event;
+                installButton.hidden = false;
+                message.textContent = "Installez l’application pour y accéder facilement depuis votre appareil.";
+                showNotice();
+            });
+
+            window.addEventListener("appinstalled", () => {
+                installPrompt = null;
+                hideNotice();
+            });
+
+            installButton.addEventListener("click", async () => {
+                if (!installPrompt) {
+                    message.textContent = "Dans Chrome, ouvrez le menu ⋮ puis choisissez « Installer CTC » ou « Installer l’application ».";
+                    installButton.hidden = true;
+                    return;
+                }
+
+                installButton.disabled = true;
+                try {
+                    await installPrompt.prompt();
+                    const choice = await installPrompt.userChoice;
+                    installPrompt = null;
+                    if (choice.outcome === "accepted") hideNotice();
+                    else {
+                        installButton.hidden = true;
+                        message.textContent = "Pour installer plus tard, ouvrez le menu ⋮ de Chrome et choisissez « Installer CTC ».";
+                    }
+                } catch (error) {
+                    console.error("Échec du lancement de l’installation CTC :", error);
+                    message.textContent = "L’installation n’a pas pu démarrer. Ouvrez le menu ⋮ de Chrome et choisissez « Installer CTC ».";
+                    installButton.hidden = true;
+                } finally {
+                    installButton.disabled = false;
+                }
+            });
+
+            document.getElementById("dismiss-install").addEventListener("click", hideNotice);
+            window.matchMedia("(display-mode: standalone)").addEventListener("change", event => {
+                if (event.matches) hideNotice();
+            });
+
+            if (document.readyState === "complete") showNotice();
+            else window.addEventListener("load", showNotice, { once: true });
+
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker.register("/service-worker.js")
+                        .catch(error => console.error("Impossible d’enregistrer l’application CTC pour Chrome :", error));
+                });
+            }
+        })();
     </script>
 </body>
 

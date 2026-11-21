@@ -1,0 +1,27 @@
+{
+  "id": "/",
+  "name": "Commission Trésorerie et Capacitation",
+  "short_name": "CTC",
+  "description": "Espace de gestion de la Commission Trésorerie et Capacitation de la Section UIDT-EPT.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f6f2",
+  "theme_color": "#842d50",
+  "categories": ["business", "finance", "productivity"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
