@@ -7,6 +7,9 @@ Application web de gestion des membres, des participations annuelles, des cotisa
 Ouvrez http://localhost:3000. À la première visite, créez le compte administrateur (mot de passe : 8 caractères minimum). Le port d’écoute par défaut est `3000` ; la variable `PORT` peut le remplacer par un nombre compris entre 1 et 65535.
 Après une mise à jour de `server.js`, arrêtez le serveur en cours avec `Ctrl+C`, puis relancez-le avec la même commande et la même configuration `DB_PATH` afin de conserver la base de données existante.
 
+### Récupérer l’accès administrateur
+Si le mot de passe administrateur est oublié, exécutez `node reset-admin-password.js` depuis un terminal dans ce dossier. Le nouveau mot de passe est saisi localement sans être affiché. Par défaut, la commande cible le compte `DIASSY` dans `data/commission.db`. Si le serveur utilise une autre base, lancez la commande avec la même variable `DB_PATH` ; pour cibler un autre administrateur, définissez `ADMIN_NAME`. La récupération ne modifie aucune donnée de gestion et déconnecte les sessions existantes de ce compte.
+
 ## Rôles
 - **Administrateur** : tout, plus les comptes et le journal des modifications (onglet Équipe).
 - **Trésorier** : saisit et modifie les données.
