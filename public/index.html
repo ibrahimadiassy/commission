@@ -14,6 +14,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <title>Commission Trésorerie et Capacitation (CTC) — UIDT-EPT</title>
+    <script>
+        (() => {
+            const saved = localStorage.getItem("ctc-theme");
+            const theme = saved === "dark" || saved === "light"
+                ? saved
+                : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
     <style>
         :root {
             --bg: #f8f6f2;
@@ -98,7 +107,7 @@
             align-items: center;
             gap: 18px;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             padding: 16px 20px;
             border: 1px solid color-mix(in srgb, var(--gold) 28%, var(--line));
             border-radius: 20px;
@@ -1282,6 +1291,168 @@
             gap: 10px
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 0 0 auto
+        }
+
+        .header-tools {
+            display: flex;
+            align-items: center;
+            gap: 7px
+        }
+
+        .header-icon-button {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: color-mix(in srgb, var(--card) 88%, transparent);
+            color: var(--ink);
+            cursor: pointer;
+            transition: background .15s, border-color .15s, transform .15s
+        }
+
+        .header-icon-button:hover {
+            background: var(--ac-soft);
+            border-color: color-mix(in srgb, var(--ac) 28%, var(--line));
+            transform: translateY(-1px)
+        }
+
+        .header-icon-button svg {
+            width: 19px;
+            height: 19px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        .notification-wrap {
+            position: relative
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            min-width: 17px;
+            height: 17px;
+            display: none;
+            place-items: center;
+            padding: 0 4px;
+            border: 2px solid var(--card);
+            border-radius: 999px;
+            background: var(--bad);
+            color: #fff;
+            font-size: 9px;
+            line-height: 1;
+            font-weight: 800
+        }
+
+        .notification-badge.visible {
+            display: grid
+        }
+
+        .notification-panel {
+            position: absolute;
+            z-index: 50;
+            top: calc(100% + 12px);
+            right: -48px;
+            width: min(360px, calc(100vw - 28px));
+            padding: 8px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--card);
+            box-shadow: 0 18px 50px rgba(40, 24, 31, .18);
+        }
+
+        .notification-panel[hidden] {
+            display: none
+        }
+
+        .notification-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 9px 10px
+        }
+
+        .notification-head strong {
+            font-size: 14px
+        }
+
+        .notification-clear {
+            border: 0;
+            background: none;
+            color: var(--ac);
+            font: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer
+        }
+
+        .notification-list {
+            display: grid;
+            gap: 5px
+        }
+
+        .notification-item {
+            display: grid;
+            grid-template-columns: 34px minmax(0, 1fr);
+            gap: 9px;
+            align-items: start;
+            padding: 10px;
+            border-radius: 11px
+        }
+
+        .notification-item:hover {
+            background: var(--bg)
+        }
+
+        .notification-item-icon {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: var(--ac-soft);
+            color: var(--ac)
+        }
+
+        .notification-item-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8
+        }
+
+        .notification-item p {
+            margin: 1px 0 2px;
+            font-size: 13px;
+            line-height: 1.35
+        }
+
+        .notification-item time {
+            color: var(--mut);
+            font-size: 11px
+        }
+
+        .notification-empty {
+            padding: 24px 12px;
+            text-align: center;
+            color: var(--mut);
+            font-size: 13px
+        }
+
         .user-avatar {
             width: 38px;
             height: 38px;
@@ -1706,6 +1877,24 @@
             .top #who:before {
                 display: none
             }
+
+            .header-actions {
+                gap: 6px
+            }
+
+            .header-tools {
+                gap: 5px
+            }
+
+            .header-icon-button {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px
+            }
+
+            .notification-panel {
+                right: -44px
+            }
         }
 
         @media(max-width:380px) {
@@ -1746,7 +1935,27 @@
                 <span class="brand-kicker">Espace de la commission</span>
                 <h1>Commission Trésorerie et Capacitation (CTC)</h1><small id="st">CTC · Section UIDT-EPT · DMWM · Moustarchidine Junior</small>
             </span></a>
-        <div id="who" class="k"></div>
+        <div class="header-actions">
+            <div class="header-tools">
+                <div class="notification-wrap">
+                    <button type="button" class="header-icon-button" id="notification-button" aria-label="Ouvrir les notifications" aria-haspopup="dialog" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+                    </button>
+                    <span class="notification-badge" id="notification-badge" aria-label="Notifications non lues">0</span>
+                    <div class="notification-panel" id="notification-panel" role="dialog" aria-label="Notifications" hidden>
+                        <div class="notification-head">
+                            <strong>Notifications</strong>
+                            <button type="button" class="notification-clear" id="notification-clear">Tout marquer comme lu</button>
+                        </div>
+                        <div class="notification-list" id="notification-list"></div>
+                    </div>
+                </div>
+                <button type="button" class="header-icon-button" id="theme-toggle" aria-label="Activer le mode nuit" aria-pressed="false">
+                    <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg>
+                </button>
+            </div>
+            <div id="who" class="k"></div>
+        </div>
     </header>
     <nav id="nav" aria-label="Navigation principale"></nav>
     <aside id="install-notice" class="install-notice" aria-label="Installer l’application CTC" aria-live="polite" hidden>
@@ -1811,7 +2020,46 @@
         let S = { members: [], events: [], projects: [], ledger: [], participations: [] }, ui = { tab: "dash", year: new Date().getFullYear(), open: {} };
 
         let db = null, warned = false, participationApiAvailable = null; const COLS = ["members", "events", "projects", "ledger", "participations"], base = Object.fromEntries(COLS.map(c => [c, Object.create(null)]));
-        const notify = (message, type = "") => { const box = document.getElementById("toast"); box.textContent = message; box.className = type; requestAnimationFrame(() => box.classList.add("show")); clearTimeout(notify.timer); notify.timer = setTimeout(() => box.classList.remove("show"), 4200) };
+        const notificationStorageKey = "ctc-notifications";
+        let notifications = [];
+        try { notifications = JSON.parse(localStorage.getItem(notificationStorageKey) || "[]").slice(0, 12) } catch (_) { notifications = [] }
+        let unreadNotifications = Number(localStorage.getItem("ctc-notifications-unread") || 0);
+        const addNotification = (message, type = "") => {
+            notifications.unshift({ message, type, at: Date.now() });
+            notifications = notifications.slice(0, 12);
+            unreadNotifications += 1;
+            localStorage.setItem(notificationStorageKey, JSON.stringify(notifications));
+            localStorage.setItem("ctc-notifications-unread", String(unreadNotifications));
+            renderNotifications()
+        };
+        function renderNotifications() {
+            const badge = document.getElementById("notification-badge");
+            const list = document.getElementById("notification-list");
+            if (!badge || !list) return;
+            badge.textContent = unreadNotifications > 9 ? "9+" : String(unreadNotifications);
+            badge.classList.toggle("visible", unreadNotifications > 0);
+            if (!notifications.length) {
+                list.innerHTML = '<div class="notification-empty">Aucune notification pour le moment.</div>';
+                return
+            }
+            list.innerHTML = notifications.map((item, index) => {
+                const time = new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" }).format(item.at);
+                const icon = item.type === "error"
+                    ? '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/></svg>'
+                    : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>';
+                return `<div class="notification-item"${index ? "" : ' aria-current="true"'}>
+                    <span class="notification-item-icon">${icon}</span>
+                    <div><p>${esc(item.message)}</p><time datetime="${new Date(item.at).toISOString()}">${esc(time)}</time></div>
+                </div>`
+            }).join("")
+        }
+        const notify = (message, type = "") => {
+            const box = document.getElementById("toast");
+            box.textContent = message; box.className = type;
+            addNotification(message, type);
+            requestAnimationFrame(() => box.classList.add("show"));
+            clearTimeout(notify.timer); notify.timer = setTimeout(() => box.classList.remove("show"), 4200)
+        };
         const fail = e => { if (!warned) { warned = true; notify(e && e.message ? `Enregistrement impossible : ${e.message}` : "Enregistrement impossible. Vérifiez vos droits et votre connexion.", "error") } };
         function sync() { COLS.forEach(c => { const ids = new Set(); S[c].forEach(o => { ids.add(o.id); const j = JSON.stringify(o); if (base[c][o.id] !== j) { base[c][o.id] = j; db.collection(c).doc(o.id).set(JSON.parse(j)).catch(fail) } }); Object.keys(base[c]).forEach(id => { if (!ids.has(id)) { delete base[c][id]; db.collection(c).doc(id).delete().catch(fail) } }) }) }
         const save = () => { if (db) sync() };
@@ -2190,6 +2438,53 @@ ${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row
                 }
             };
         }
+        const themeToggle = document.getElementById("theme-toggle");
+        const themeMeta = document.querySelector('meta[name="theme-color"]');
+        function applyTheme(theme) {
+            document.documentElement.dataset.theme = theme;
+            localStorage.setItem("ctc-theme", theme);
+            const dark = theme === "dark";
+            themeToggle.setAttribute("aria-pressed", String(dark));
+            themeToggle.setAttribute("aria-label", dark ? "Activer le mode clair" : "Activer le mode nuit");
+            themeToggle.querySelector(".theme-icon").innerHTML = dark
+                ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>'
+                : '<path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/>';
+            if (themeMeta) themeMeta.content = dark ? "#171316" : "#842d50";
+        }
+        themeToggle.addEventListener("click", () => {
+            applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark")
+        });
+        applyTheme(document.documentElement.dataset.theme || "light");
+
+        const notificationButton = document.getElementById("notification-button");
+        const notificationPanel = document.getElementById("notification-panel");
+        const notificationClear = document.getElementById("notification-clear");
+        function closeNotifications() {
+            notificationPanel.hidden = true;
+            notificationButton.setAttribute("aria-expanded", "false")
+        }
+        notificationButton.addEventListener("click", () => {
+            const opening = notificationPanel.hidden;
+            notificationPanel.hidden = !opening;
+            notificationButton.setAttribute("aria-expanded", String(opening));
+            if (opening) {
+                unreadNotifications = 0;
+                localStorage.setItem("ctc-notifications-unread", "0");
+                renderNotifications()
+            }
+        });
+        notificationClear.addEventListener("click", () => {
+            unreadNotifications = 0;
+            localStorage.setItem("ctc-notifications-unread", "0");
+            renderNotifications()
+        });
+        document.addEventListener("click", e => {
+            if (!e.target.closest(".notification-wrap")) closeNotifications()
+        });
+        document.addEventListener("keydown", e => {
+            if (e.key === "Escape") closeNotifications()
+        });
+        renderNotifications();
         document.addEventListener("click", async e => {
             const b = e.target.closest("[data-a=delU]"); if (b && confirm("Supprimer ce compte ?")) { try { await api("DELETE", "/api/users/" + b.dataset.i); await loadEq(); notify("Le compte a été supprimé.") } catch (x) { notify(x.message, "error") } }
             if (e.target.closest("#change-password")) { const form = document.getElementById("password-form"); form.reset(); document.getElementById("password-error").textContent = ""; pendingProfilePhoto = null; document.getElementById("profile-photo").value = ""; document.getElementById("profile-photo-preview").innerHTML = userAvatar(ME.name, ME.photo); document.getElementById("password-dialog").showModal() }
