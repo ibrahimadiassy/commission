@@ -1,6 +1,6 @@
 # Commission Trésorerie et Capacitation (CTC) — Section UIDT-EPT
 
-Application web de gestion des membres, des participations annuelles, des cotisations, des projets de vente et de la caisse de la **Commission Trésorerie et Capacitation (CTC)** de la **Section UIDT-EPT**, au sein du **Comité inter-universitaire DMWM** (Moustarchidine Junior), Conseil des établissements supérieurs de Thiès. Aucune dépendance : seulement Node.js 22.5 ou plus.
+Application web de gestion des membres, des participations annuelles, des cotisations, des projets de vente et de la caisse de la **Commission Trésorerie et Capacitation (CTC)** de la **Section UIDT-EPT**, au sein du **Comité inter-universitaire DMWM** (Moustarchidine Junior), Conseil des établissements supérieurs de Thiès. Node.js 22.5 ou plus est requis.
 
 ## Lancer chez vous
     npm start
@@ -12,6 +12,42 @@ Ouvrez l’adresse de l’application dans Chrome, puis choisissez **Installer C
 
 ### Récupérer l’accès administrateur
 Si le mot de passe administrateur est oublié, exécutez `node reset-admin-password.js` depuis un terminal dans ce dossier. Le nouveau mot de passe est saisi localement sans être affiché. Par défaut, la commande cible le compte `DIASSY` dans `data/commission.db`. Si le serveur utilise une autre base, lancez la commande avec la même variable `DB_PATH` ; pour cibler un autre administrateur, définissez `ADMIN_NAME`. La récupération ne modifie aucune donnée de gestion et déconnecte les sessions existantes de ce compte.
+
+### Connexion par e-mail et récupération du mot de passe
+Les utilisateurs peuvent se connecter avec leur nom d’utilisateur ou l’adresse e-mail associée au compte. Pour les comptes déjà créés, l’administrateur doit enregistrer chaque adresse dans **Équipe** ; les nouveaux comptes demandent une adresse e-mail.
+
+Sous Windows, configurez SMTP sans inscrire de secret dans le code :
+
+1. Ouvrez PowerShell dans le dossier `commission` et lancez `.\configure-smtp.ps1`.
+2. Gardez l’hôte Gmail (`smtp.gmail.com`) et le port (`587`) proposés, puis saisissez l’adresse Gmail utilisée pour envoyer les e-mails.
+3. Saisissez un **mot de passe d’application Google** lorsqu’il est demandé. La saisie est masquée ; les espaces de présentation éventuellement copiés avec le mot de passe sont retirés automatiquement. Le mot de passe Gmail habituel ne convient pas. Google exige que la validation en deux étapes soit activée pour créer un mot de passe d’application.
+4. Gardez l’URL locale proposée, `http://localhost:3000`, pour les essais sur cet ordinateur. Le script crée `.env`, exclu de Git, avec des permissions restreintes.
+
+Le lien construit avec `localhost` ne peut être ouvert que sur l’ordinateur où tourne le serveur ; cette configuration sert uniquement à tester l’envoi et le changement de mot de passe en local. Pour permettre aux autres utilisateurs d’ouvrir les liens, l’application doit ensuite être accessible par HTTPS depuis Internet.
+
+Pour le site hébergé sur Render, le fichier `.env` de votre ordinateur ne configure pas le serveur en ligne. Ouvrez le service Render **commission-cmf0** → **Environment**, puis définissez les variables `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` et `APP_URL` avec les valeurs ci-dessus et l’URL `https://commission-cmf0.onrender.com`. Ajoutez aussi `TRUST_PROXY=1` : Render termine HTTPS devant Node.js, et ce réglage active le cookie de session sécurisé ainsi qu’une limitation des tentatives par adresse client. N’activez cette option que derrière un proxy de confiance qui définit les en-têtes `X-Forwarded-*`. Enregistrez puis redéployez/redémarrez le service. Saisissez `SMTP_PASS` uniquement dans l’interface sécurisée de Render ; ne le mettez jamais dans le dépôt ou dans un message.
+
+Le script crée ou met à jour le fichier `.env`. Pour une configuration d’hébergement, définissez les variables d’environnement équivalentes :
+
+- `SMTP_HOST` : serveur SMTP.
+- `SMTP_PORT` : port SMTP (587 par défaut ; le port 465 active TLS direct).
+- `SMTP_SECURE=true` : activer TLS direct si le fournisseur l’exige.
+- `SMTP_USER` et `SMTP_PASS` : identifiants SMTP, si requis par le fournisseur. Gardez le mot de passe dans la configuration sécurisée de l’hébergement, jamais dans le code.
+- `SMTP_FROM` : adresse d’expédition autorisée par le fournisseur.
+- `APP_URL` : URL publique de l’application, en HTTPS en production (par exemple `https://ctc.example.org`).
+
+Variables attendues par le serveur :
+```powershell
+SMTP_HOST=smtp.example.org
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=compte-smtp
+SMTP_PASS=(secret SMTP, à conserver dans la configuration sécurisée)
+SMTP_FROM=CTC <noreply@example.org>
+APP_URL=https://ctc.example.org
+```
+
+Le port 465 utilise TLS direct (`SMTP_SECURE=true`) ; le port 587 utilise normalement STARTTLS (`SMTP_SECURE=false`). Les demandes de récupération renvoient un lien à usage unique, valable une heure, et invalident les sessions du compte après le changement du mot de passe. Sans configuration SMTP, la connexion par adresse e-mail fonctionne, mais l’envoi des liens de récupération n’est pas disponible.
 
 ## Rôles
 - **Administrateur** : tout, plus les comptes et le journal des modifications (onglet Équipe).
@@ -25,7 +61,7 @@ Si le mot de passe administrateur est oublié, exécutez `node reset-admin-passw
 - Le montant d’une cotisation et le prix de vente doivent être supérieurs à zéro. Un règlement ne peut pas dépasser la cotisation. Le coût d’achat peut être nul.
 - Une participation annuelle est définie une seule fois par année, avec un montant commun à tous les membres. Les règlements partiels sont datés, leur historique est conservé et ils sont comptabilisés dans la caisse. Tous les membres enregistrés apparaissent dans le suivi.
 - Une vente doit indiquer un membre, une quantité entière d’au moins un article et une date. Un mouvement de caisse doit préciser son type, son motif, sa date et un montant positif.
-- Les comptes utilisent un nom de 2 à 80 caractères et un mot de passe de 8 à 128 caractères. Les rôles déterminent les droits d’accès.
+- Chaque compte a un nom de 2 à 80 caractères et une adresse e-mail unique. La connexion accepte l’un ou l’autre ; ils ne sont pas sensibles aux majuscules/minuscules. Le mot de passe doit compter 8 à 128 caractères et reste sensible à la casse. Les rôles déterminent les droits d’accès : le lecteur consulte sans modifier, tandis que le trésorier et l’administrateur peuvent enregistrer les changements.
 
 ## Profils des membres
 L’onglet **Membres** sert d’annuaire : vous pouvez rechercher une personne par nom ou téléphone, puis ouvrir sa fiche. Lors de la création, renseignez le nom et la date réelle d’adhésion ; le téléphone et la fonction dans l’organisation sont facultatifs.

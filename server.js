@@ -1,18 +1,26 @@
-// Serveur CTC sans dépendance externe (Node 22.5+)
+// Serveur CTC (Node.js 22.5+)
 const http = require("http"), fs = require("fs"), path = require("path"), crypto = require("crypto");
 const { DatabaseSync } = require("node:sqlite");
+const nodemailer = require("nodemailer");
+try { process.loadEnvFile(path.join(__dirname, ".env")); }
+catch (error) { if (error.code !== "ENOENT") throw error; }
 const PORT = process.env.PORT === undefined || process.env.PORT === "" ? 3000 : Number(process.env.PORT);
 if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) throw new Error("PORT doit être un nombre entier compris entre 1 et 65535.");
 const DATA = process.env.DB_PATH ? path.dirname(process.env.DB_PATH) : path.join(__dirname, "data"); fs.mkdirSync(DATA, { recursive: true });
+
 const db = new DatabaseSync(process.env.DB_PATH || path.join(__dirname, "data", "commission.db"));
 db.exec("pragma busy_timeout=5000");
 db.exec(`create table if not exists users(id integer primary key, name text unique, hash text, role text);
 create table if not exists docs(col text, id text, json text, primary key(col,id));
 create table if not exists audit(t text, u text, a text, col text, id text);
 create table if not exists sessions(tok text primary key, uid integer, exp integer);
+create table if not exists password_resets(token_hash text primary key, uid integer not null, exp integer not null);
 create index if not exists sessions_exp on sessions(exp);`);
 try { db.prepare("select photo from users limit 1").get(); }
 catch { db.exec("alter table users add column photo text"); }
+try { db.prepare("select email from users limit 1").get(); }
+catch { db.exec("alter table users add column email text"); }
+db.exec("create unique index if not exists users_email_unique on users(email collate nocase) where email is not null and email<>''; create index if not exists password_resets_exp on password_resets(exp);");
 const COLS = ["members", "events", "projects", "ledger", "participations"], ROLES = ["admin", "tresorier", "lecteur"], WRITERS = ["admin", "tresorier"];
 const q = (s, ...a) => db.prepare(s).all(...a), one = (s, ...a) => db.prepare(s).get(...a), run = (s, ...a) => db.prepare(s).run(...a);
 const transaction = action => {
@@ -33,6 +41,37 @@ const text = (v, min, max) => typeof v === "string" && v.trim().length >= min &&
 const integer = (v, min) => Number.isSafeInteger(v) && v >= min;
 const photo = v => v === null || v === "" || typeof v === "string" && /^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(v) && v.length <= 1500000;
 const date = v => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && Number.isFinite(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v;
+const normalizeUsername = value => value.trim().normalize("NFC").toLocaleLowerCase("fr");
+const normalizeEmail = value => value.trim().normalize("NFC").toLocaleLowerCase("en-US");
+const validEmail = value => typeof value === "string" && value.trim().length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim());
+const hasCrossAccountIdentityConflict = (name, email, excludedUserId = null) => q("select id,name,email from users").some(user =>
+  user.id !== excludedUserId && (
+    normalizeUsername(user.name) === normalizeUsername(email) ||
+    user.email && normalizeUsername(user.email) === normalizeUsername(name)
+  )
+);
+const SMTP_HOST = process.env.SMTP_HOST || "", SMTP_PORT = Number(process.env.SMTP_PORT || 587);
+const SMTP_USER = process.env.SMTP_USER || "", SMTP_PASS = process.env.SMTP_PASS || "";
+const SMTP_FROM = process.env.SMTP_FROM || "", APP_URL = process.env.APP_URL || "";
+const smtpReady = Boolean(SMTP_HOST && SMTP_FROM && APP_URL);
+const mailer = smtpReady ? nodemailer.createTransport({
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: process.env.SMTP_SECURE === "true" || SMTP_PORT === 465,
+  ...(SMTP_USER || SMTP_PASS ? { auth: { user: SMTP_USER, pass: SMTP_PASS } } : {})
+}) : null;
+if ([SMTP_HOST, SMTP_FROM, APP_URL, SMTP_USER, SMTP_PASS].some(Boolean) && !smtpReady) {
+  throw new Error("Configuration incomplète : définissez SMTP_HOST, SMTP_FROM et APP_URL ensemble.");
+}
+if (smtpReady) {
+  let publicUrl;
+  try { publicUrl = new URL(APP_URL); } catch { throw new Error("APP_URL doit être une adresse HTTP(S) valide."); }
+  const localHost = ["localhost", "127.0.0.1", "::1"].includes(publicUrl.hostname);
+  if (!Number.isInteger(SMTP_PORT) || SMTP_PORT < 1 || SMTP_PORT > 65535 || !["http:", "https:"].includes(publicUrl.protocol) || publicUrl.protocol !== "https:" && !localHost || Boolean(SMTP_USER) !== Boolean(SMTP_PASS)) {
+    throw new Error("Configuration SMTP invalide : vérifiez SMTP_PORT, les identifiants SMTP et l’URL HTTPS APP_URL.");
+  }
+}
+const passwordResetRequests = new Map();
 function normalizeSenegalPhone(value) {
   if (typeof value !== "string") return null;
   const input = value.trim();
@@ -109,13 +148,20 @@ const limited = ip => {
 };
 const failure = ip => { const attempts = tries.get(ip) || []; attempts.push(Date.now()); tries.set(ip, attempts); };
 const clearExpiredSessions = () => run("delete from sessions where exp<=?", Date.now());
+const clearExpiredPasswordResets = () => run("delete from password_resets where exp<=?", Date.now());
 clearExpiredSessions();
+clearExpiredPasswordResets();
 const sessionCleanup = setInterval(() => {
   clearExpiredSessions();
+  clearExpiredPasswordResets();
   const now = Date.now();
   for (const [ip, attempts] of tries) {
     const active = attempts.filter(time => now - time < 600000);
     if (active.length) tries.set(ip, active); else tries.delete(ip);
+  }
+  for (const [ip, attempts] of passwordResetRequests) {
+    const active = attempts.filter(time => now - time < 15 * 60e3);
+    if (active.length) passwordResetRequests.set(ip, active); else passwordResetRequests.delete(ip);
   }
 }, 60000);
 sessionCleanup.unref();
@@ -155,7 +201,9 @@ const body = req => new Promise((ok, ko) => {
 const log = (u, a, col = "", id = "") => run("insert into audit values(?,?,?,?,?)", new Date().toISOString(), u.name, a, col, id);
 
 const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url, "http://x"), p = url.pathname, ip = req.socket.remoteAddress;
+  const url = new URL(req.url, "http://x"), p = url.pathname;
+  const forwardedFor = process.env.TRUST_PROXY === "1" && typeof req.headers["x-forwarded-for"] === "string" ? req.headers["x-forwarded-for"].split(",")[0].trim() : "";
+  const ip = forwardedFor || req.socket.remoteAddress || "unknown";
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "same-origin");
@@ -184,12 +232,12 @@ const server = http.createServer(async (req, res) => {
     if (p === "/api/setup" && req.method === "POST") {
       if (one("select count(*) n from users").n) return send(res, 403, { error: "Déjà configuré" });
       const b = await body(req);
-      if (!text(b.name, 2, 80) || typeof b.password !== "string" || b.password.length < 8 || b.password.length > 128 || !photo(b.photo)) return send(res, 400, { error: "Un nom de 2 à 80 caractères, un mot de passe de 8 à 128 caractères et une photo valide sont requis." });
-      const name = b.name.trim(), passwordHash = hash(b.password);
+      if (!text(b.name, 2, 80) || !validEmail(b.email) || typeof b.password !== "string" || b.password.length < 8 || b.password.length > 128 || !photo(b.photo)) return send(res, 400, { error: "Un nom, une adresse e-mail valide, un mot de passe de 8 à 128 caractères et une photo valide sont requis." });
+      const name = b.name.trim(), email = normalizeEmail(b.email), passwordHash = hash(b.password);
       const tok = crypto.randomBytes(32).toString("hex");
       const r = transaction(() => {
         if (one("select count(*) n from users").n) return null;
-        const created = run("insert into users(name,hash,role,photo) values(?,?,?,?)", name, passwordHash, "admin", b.photo || null);
+        const created = run("insert into users(name,hash,role,photo,email) values(?,?,?,?,?)", name, passwordHash, "admin", b.photo || null, email);
         run("insert into sessions values(?,?,?)", tok, created.lastInsertRowid, Date.now() + 7 * 864e5);
         log({ name }, "initialiser espace", "users", name);
         return created;
@@ -199,12 +247,61 @@ const server = http.createServer(async (req, res) => {
     }
     if (p === "/api/login" && req.method === "POST") {
       if (limited(ip)) return send(res, 429, { error: "Trop d’essais. Réessayez dans 10 minutes." });
-      const b = await body(req), name = typeof b.name === "string" ? b.name.trim() : "", password = typeof b.password === "string" ? b.password : "", u = one("select * from users where name=?", name);
-      if (!u || password.length > 128 || !check(password, u.hash)) { failure(ip); return send(res, 401, { error: "Nom ou mot de passe incorrect" }); }
+      const b = await body(req), identity = typeof (b.identity ?? b.name) === "string" ? String(b.identity ?? b.name).trim() : "", normalizedUsername = normalizeUsername(identity), normalizedEmail = normalizeEmail(identity), password = typeof b.password === "string" ? b.password : "", candidates = q("select * from users").filter(user => normalizeUsername(user.name) === normalizedUsername || user.email && normalizeEmail(user.email) === normalizedEmail), u = password.length <= 128 ? candidates.find(user => check(password, user.hash)) : null;
+      if (!u) { failure(ip); return send(res, 401, { error: "Nom ou mot de passe incorrect" }); }
       tries.delete(ip);
       const tok = crypto.randomBytes(32).toString("hex");
       transaction(() => { run("insert into sessions values(?,?,?)", tok, u.id, Date.now() + 7 * 864e5); log(u, "connexion"); });
       setSessionCookie(req, res, tok, 604800); return send(res, 200, { ok: 1 });
+    }
+    if (p === "/api/password/forgot" && req.method === "POST") {
+      if (!mailer) return send(res, 503, { error: "La récupération par e-mail n’est pas encore configurée sur le serveur." });
+      const attempts = (passwordResetRequests.get(ip) || []).filter(time => Date.now() - time < 15 * 60e3);
+      if (attempts.length >= 5) return send(res, 429, { error: "Trop de demandes. Réessayez dans 15 minutes." });
+      attempts.push(Date.now()); passwordResetRequests.set(ip, attempts);
+      const b = await body(req), email = typeof b.email === "string" && validEmail(b.email) ? normalizeEmail(b.email) : "";
+      const user = email ? one("select id,name,email from users where email=? collate nocase", email) : null;
+      if (!user) return send(res, 200, { ok: 1 });
+
+      const token = crypto.randomBytes(32).toString("hex"), tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+      transaction(() => {
+        run("delete from password_resets where uid=?", user.id);
+        run("insert into password_resets(token_hash,uid,exp) values(?,?,?)", tokenHash, user.id, Date.now() + 60 * 60e3);
+      });
+      const resetUrl = new URL("/", APP_URL);
+      resetUrl.searchParams.set("reset", token);
+      try {
+        await mailer.sendMail({
+          from: SMTP_FROM,
+          to: user.email,
+          subject: "Réinitialisation de votre mot de passe CTC",
+          text: `Bonjour ${user.name},\n\nUne demande de réinitialisation du mot de passe de votre compte CTC a été effectuée. Ouvrez ce lien dans l’heure :\n${resetUrl.href}\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message.`
+        });
+      } catch (error) {
+        transaction(() => run("delete from password_resets where token_hash=?", tokenHash));
+        console.error("Échec de l’envoi du courriel de récupération :", error.message);
+        return send(res, 503, { error: "L’e-mail de récupération n’a pas pu être envoyé. Réessayez plus tard ou contactez l’administrateur." });
+      }
+      return send(res, 200, { ok: 1 });
+    }
+    if (p === "/api/password/reset" && req.method === "POST") {
+      const b = await body(req), token = typeof b.token === "string" ? b.token : "";
+      if (!/^[a-f0-9]{64}$/.test(token) || typeof b.password !== "string" || b.password.length < 8 || b.password.length > 128) {
+        return send(res, 400, { error: "Le lien est invalide ou expiré, ou le mot de passe ne respecte pas les critères." });
+      }
+      const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+      const result = transaction(() => {
+        const reset = one("select uid from password_resets where token_hash=? and exp>?", tokenHash, Date.now());
+        if (!reset) return null;
+        const user = one("select id,name from users where id=?", reset.uid);
+        if (!user) return null;
+        run("update users set hash=? where id=?", hash(b.password), user.id);
+        run("delete from password_resets where uid=?", user.id);
+        run("delete from sessions where uid=?", user.id);
+        log(user, "réinitialiser le mot de passe par e-mail", "users", user.name);
+        return true;
+      });
+      return result ? send(res, 200, { ok: 1 }) : send(res, 400, { error: "Le lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau." });
     }
     if (p === "/api/logout" && req.method === "POST") {
       transaction(() => run("delete from sessions where tok=?", /(?:^|; )sid=([a-f0-9]+)/.exec(req.headers.cookie || "")?.[1] || ""));
@@ -332,21 +429,43 @@ const server = http.createServer(async (req, res) => {
         return send(res, 200, {});
       }
     }
-    if (p === "/api/users" || /^\/api\/users\/\d+$/.test(p) || p === "/api/audit") {
+    if (p === "/api/users" || /^\/api\/users\/\d+(?:\/email)?$/.test(p) || p === "/api/audit") {
       if (me.role !== "admin") return send(res, 403, { error: "Réservé à l’administrateur" });
       if (p === "/api/audit" && req.method === "GET") return send(res, 200, q("select * from audit order by t desc limit 200"));
-      if (p === "/api/users" && req.method === "GET") return send(res, 200, q("select id,name,role,photo from users"));
+      if (p === "/api/users" && req.method === "GET") return send(res, 200, q("select id,name,role,photo,email from users"));
       if (p === "/api/users" && req.method === "POST") {
         const b = await body(req);
-        if (!text(b.name, 2, 80) || typeof b.password !== "string" || b.password.length < 8 || b.password.length > 128 || !ROLES.includes(b.role) || !photo(b.photo)) return send(res, 400, { error: "Un nom de 2 à 80 caractères, un rôle, un mot de passe de 8 à 128 caractères et une photo valide sont requis." });
-        const name = b.name.trim(), passwordHash = hash(b.password);
+        if (!text(b.name, 2, 80) || !validEmail(b.email) || typeof b.password !== "string" || b.password.length < 8 || b.password.length > 128 || !ROLES.includes(b.role) || !photo(b.photo)) return send(res, 400, { error: "Un nom, une adresse e-mail valide, un rôle, un mot de passe de 8 à 128 caractères et une photo valide sont requis." });
+        const name = b.name.trim().normalize("NFC"), email = normalizeEmail(b.email), passwordHash = hash(b.password);
         const created = transaction(() => {
-          if (one("select id from users where name=?", name)) return false;
-          run("insert into users(name,hash,role,photo) values(?,?,?,?)", name, passwordHash, b.role, b.photo || null);
+          if (q("select name from users").some(user => normalizeUsername(user.name) === normalizeUsername(name))) return false;
+          if (one("select id from users where email=? collate nocase", email)) return "email";
+          if (hasCrossAccountIdentityConflict(name, email)) return "identity";
+          run("insert into users(name,hash,role,photo,email) values(?,?,?,?,?)", name, passwordHash, b.role, b.photo || null, email);
           log(me, "créer utilisateur", "users", name);
           return true;
         });
-        return created ? send(res, 200, {}) : send(res, 409, { error: "Ce nom existe déjà" });
+        return created === true ? send(res, 200, {}) : send(res, 409, { error: created === "email" ? "Cette adresse e-mail est déjà associée à un compte." : created === "identity" ? "Ce nom ou cette adresse e-mail est déjà utilisé par un autre compte." : "Ce nom existe déjà." });
+      }
+      m = /^\/api\/users\/(\d+)\/email$/.exec(p);
+      if (m && req.method === "PUT") {
+        const b = await body(req);
+        if (!validEmail(b.email)) return send(res, 400, { error: "Saisissez une adresse e-mail valide." });
+        const email = normalizeEmail(b.email), userId = Number(m[1]);
+        const result = transaction(() => {
+          const user = one("select id,name from users where id=?", userId);
+          if (!user) return "missing";
+          if (one("select id from users where email=? collate nocase and id<>?", email, userId)) return "duplicate";
+          if (hasCrossAccountIdentityConflict(user.name, email, userId)) return "identity";
+          run("update users set email=? where id=?", email, userId);
+          run("delete from password_resets where uid=?", userId);
+          log(me, "modifier e-mail utilisateur", "users", user.name);
+          return true;
+        });
+        if (result === "missing") return send(res, 404, { error: "Utilisateur introuvable." });
+        if (result === "duplicate") return send(res, 409, { error: "Cette adresse e-mail est déjà associée à un compte." });
+        if (result === "identity") return send(res, 409, { error: "Cette adresse e-mail est déjà utilisée comme nom d’utilisateur par un autre compte." });
+        return send(res, 200, {});
       }
       m = /^\/api\/users\/(\d+)$/.exec(p);
       if (m && req.method === "DELETE") {

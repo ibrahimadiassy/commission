@@ -1291,6 +1291,57 @@
             gap: 10px
         }
 
+        .who-profile-wrap {
+            position: relative
+        }
+
+        .who-profile-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 4px 9px 4px 4px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--card);
+            color: var(--ink);
+            font: inherit;
+            cursor: pointer
+        }
+
+        .who-profile-name {
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 12px;
+            font-weight: 750
+        }
+
+        .who-menu {
+            position: absolute;
+            z-index: 60;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 210px;
+            display: grid;
+            gap: 6px;
+            padding: 8px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--card);
+            box-shadow: 0 18px 50px rgba(40, 24, 31, .18)
+        }
+
+        .who-menu[hidden] {
+            display: none
+        }
+
+        .who-menu button {
+            width: 100%;
+            text-align: left
+        }
+
         .header-actions {
             display: flex;
             align-items: center;
@@ -1839,28 +1890,32 @@
 
         @media(max-width:430px) {
             .top {
-                align-items: center;
-                padding: 12px 14px
+                align-items: flex-start;
+                flex-wrap: wrap;
+                padding: 10px 12px
             }
 
             .brand-lockup {
                 align-items: center;
-                flex: 1;
-                gap: 12px
+                flex: 1 1 100%;
+                gap: 8px;
+                min-width: 0
             }
 
             .brand-logo {
-                width: 88px
+                width: 68px
             }
 
             .brand-copy {
                 flex: 1;
-                max-width: none
+                max-width: none;
+                min-width: 0
             }
 
             .brand-copy h1 {
-                font-size: 16px;
-                line-height: 1.15
+                max-width: 220px;
+                font-size: 13px;
+                line-height: 1.18
             }
 
             .brand-copy>small {
@@ -1868,10 +1923,20 @@
                 font-size: 9px
             }
 
+            .brand-kicker {
+                margin-bottom: 1px
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: flex-end;
+                padding-top: 4px;
+                border-top: 1px solid var(--line);
+                gap: 8px
+            }
+
             .top #who {
-                flex-direction: column;
-                align-items: flex-end;
-                font-size: 10px
+                display: block
             }
 
             .top #who:before {
@@ -1894,6 +1959,66 @@
 
             .notification-panel {
                 right: -44px
+            }
+
+            .who-profile-name {
+                display: none
+            }
+
+            .who-profile-button {
+                width: 40px;
+                height: 40px;
+                min-height: 40px;
+                justify-content: center;
+                padding: 0
+            }
+
+            .who-profile-button .user-avatar {
+                width: 34px;
+                height: 34px
+            }
+
+            .who-menu {
+                right: -2px
+            }
+        }
+
+        @media(max-width:280px) {
+            .top {
+                padding: 8px
+            }
+
+            .brand-logo {
+                width: 52px
+            }
+
+            .brand-copy h1 {
+                font-size: 12px
+            }
+
+            .brand-copy>small {
+                display: none
+            }
+
+            .header-actions {
+                padding-top: 6px
+            }
+
+            .header-icon-button,
+            .who-profile-button {
+                width: 34px;
+                height: 34px;
+                min-height: 34px
+            }
+
+            .who-profile-button .user-avatar {
+                width: 30px;
+                height: 30px
+            }
+
+            .notification-panel {
+                right: -78px
+                width: calc(100vw - 16px)
             }
         }
 
@@ -1933,38 +2058,54 @@
                 <circle cx="158" cy="14" r="3" fill="url(#brand-gold)" />
             </svg><span class="brand-copy">
                 <span class="brand-kicker">Espace de la commission</span>
-                <h1>Commission Trésorerie et Capacitation (CTC)</h1><small id="st">CTC · Section UIDT-EPT · DMWM · Moustarchidine Junior</small>
+                <h1>Commission Trésorerie et Capacitation (CTC)</h1><small id="st">CTC · Section UIDT-EPT · DMWM ·
+                    Moustarchidine Junior</small>
             </span></a>
         <div class="header-actions">
             <div class="header-tools">
-                <div class="notification-wrap">
-                    <button type="button" class="header-icon-button" id="notification-button" aria-label="Ouvrir les notifications" aria-haspopup="dialog" aria-expanded="false">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+                <div class="notification-wrap" id="notification-wrap" hidden>
+                    <button type="button" class="header-icon-button" id="notification-button"
+                        aria-label="Ouvrir les notifications" aria-haspopup="dialog" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+                            <path d="M10 21h4" />
+                        </svg>
                     </button>
-                    <span class="notification-badge" id="notification-badge" aria-label="Notifications non lues">0</span>
-                    <div class="notification-panel" id="notification-panel" role="dialog" aria-label="Notifications" hidden>
+                    <span class="notification-badge" id="notification-badge"
+                        aria-label="Notifications non lues">0</span>
+                    <div class="notification-panel" id="notification-panel" role="dialog" aria-label="Notifications"
+                        hidden>
                         <div class="notification-head">
                             <strong>Notifications</strong>
-                            <button type="button" class="notification-clear" id="notification-clear">Tout marquer comme lu</button>
+                            <button type="button" class="notification-clear" id="notification-clear">Tout marquer comme
+                                lu</button>
                         </div>
                         <div class="notification-list" id="notification-list"></div>
                     </div>
                 </div>
-                <button type="button" class="header-icon-button" id="theme-toggle" aria-label="Activer le mode nuit" aria-pressed="false">
-                    <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg>
+                <button type="button" class="header-icon-button" id="theme-toggle" aria-label="Activer le mode nuit"
+                    aria-pressed="false">
+                    <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z" />
+                    </svg>
                 </button>
             </div>
             <div id="who" class="k"></div>
         </div>
     </header>
     <nav id="nav" aria-label="Navigation principale"></nav>
-    <aside id="install-notice" class="install-notice" aria-label="Installer l’application CTC" aria-live="polite" hidden>
+    <aside id="install-notice" class="install-notice" aria-label="Installer l’application CTC" aria-live="polite"
+        hidden>
         <span class="install-notice-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 7v7m-3-3 3 3 3-3m-6 7h6"/></svg>
+            <svg viewBox="0 0 24 24">
+                <rect x="5" y="3" width="14" height="18" rx="2" />
+                <path d="M12 7v7m-3-3 3 3 3-3m-6 7h6" />
+            </svg>
         </span>
         <div class="install-notice-copy">
             <strong>Installer CTC sur cet appareil</strong>
-            <p id="install-notice-message">Retrouvez l’espace de la commission dans une fenêtre dédiée, comme une application.</p>
+            <p id="install-notice-message">Retrouvez l’espace de la commission dans une fenêtre dédiée, comme une
+                application.</p>
         </div>
         <div class="install-notice-actions">
             <button type="button" class="b" id="install-app" hidden>Installer</button>
@@ -1980,7 +2121,8 @@
     </dialog>
     <dialog id="password-dialog" class="member-profile password-dialog" aria-labelledby="password-title">
         <h2 id="password-title">Modifier mon mot de passe</h2>
-        <p class="k">Choisissez un mot de passe personnel de 8 à 128 caractères. Vos autres sessions seront déconnectées.</p>
+        <p class="k">Choisissez un mot de passe personnel de 8 à 128 caractères. Vos autres sessions seront
+            déconnectées.</p>
         <div class="profile-photo-form">
             <div id="profile-photo-preview"></div>
             <div>
@@ -1999,11 +2141,13 @@
                 <input name="currentPassword" type="password" autocomplete="current-password" maxlength="128" required>
             </label>
             <label>Nouveau mot de passe
-                <input name="newPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required aria-describedby="new-password-help">
+                <input name="newPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128"
+                    required aria-describedby="new-password-help">
                 <small class="hint" id="new-password-help">8 à 128 caractères.</small>
             </label>
             <label>Confirmer le nouveau mot de passe
-                <input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+                <input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128"
+                    required>
             </label>
             <div class="bad" id="password-error" role="alert"></div>
             <div class="dialog-actions">
@@ -2017,19 +2161,37 @@
         const ORG_NAME = "Commission Trésorerie et Capacitation (CTC)";
         const MO = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
         const TABS = [["dash", "Tableau de bord"], ["mem", "Membres"], ["annual", "Participation annuelle"], ["evt", "Cotisations"], ["pro", "Ventes"], ["cai", "Caisse"], ["sav", "Sauvegarde"], ["eq", "Équipe"]];
-        let S = { members: [], events: [], projects: [], ledger: [], participations: [] }, ui = { tab: "dash", year: new Date().getFullYear(), open: {} };
+        let S = { members: [], events: [], projects: [], ledger: [], participations: [] }, ui = { tab: "dash", year: new Date().getFullYear(), open: {} }, ME = null;
 
         let db = null, warned = false, participationApiAvailable = null; const COLS = ["members", "events", "projects", "ledger", "participations"], base = Object.fromEntries(COLS.map(c => [c, Object.create(null)]));
-        const notificationStorageKey = "ctc-notifications";
         let notifications = [];
-        try { notifications = JSON.parse(localStorage.getItem(notificationStorageKey) || "[]").slice(0, 12) } catch (_) { notifications = [] }
-        let unreadNotifications = Number(localStorage.getItem("ctc-notifications-unread") || 0);
+        let unreadNotifications = 0;
+        const notificationStorageKeys = () => ME ? { history: `ctc-notifications:${ME.id}`, unread: `ctc-notifications-unread:${ME.id}` } : null;
+        function loadUserNotifications() {
+            const keys = notificationStorageKeys();
+            if (!keys) return;
+            try {
+                const stored = JSON.parse(localStorage.getItem(keys.history) || "[]");
+                notifications = Array.isArray(stored)
+                    ? stored.filter(item => item && typeof item.message === "string" && Number.isFinite(new Date(item.at).getTime())).slice(0, 12)
+                    : [];
+                const unread = Number(localStorage.getItem(keys.unread) || 0);
+                unreadNotifications = Number.isSafeInteger(unread) && unread > 0 ? unread : 0
+            } catch (error) {
+                notifications = [];
+                unreadNotifications = 0;
+                console.warn("Impossible de charger l’historique des notifications :", error)
+            }
+        }
         const addNotification = (message, type = "") => {
             notifications.unshift({ message, type, at: Date.now() });
             notifications = notifications.slice(0, 12);
             unreadNotifications += 1;
-            localStorage.setItem(notificationStorageKey, JSON.stringify(notifications));
-            localStorage.setItem("ctc-notifications-unread", String(unreadNotifications));
+            const keys = notificationStorageKeys();
+            if (keys) {
+                localStorage.setItem(keys.history, JSON.stringify(notifications));
+                localStorage.setItem(keys.unread, String(unreadNotifications))
+            }
             renderNotifications()
         };
         function renderNotifications() {
@@ -2204,8 +2366,8 @@ ${tbl(["Date", "Désignation", "#Recette", "#Dépense", ""], txs().map(x => `<tr
 
         function eq() {
             if (ME.role != "admin") return `<div class="em">Réservé à l’administrateur.</div>`;
-            return `<div class="card"><h2>Créer un compte utilisateur</h2><p class="k">Attribuez à chaque personne un compte individuel avec les droits adaptés à ses responsabilités.</p><form id="fu"><p class="field-key"><span class="req">*</span> Champ obligatoire</p><label>Nom d’utilisateur <span class="req" aria-hidden="true">*</span><input name="name" autocomplete="off" minlength="2" maxlength="80" required placeholder="Ex. awa.diop" aria-describedby="user-name-help"><small id="user-name-help" class="hint">2 à 80 caractères ; ce nom servira à la connexion.</small></label><label>Mot de passe provisoire <span class="req" aria-hidden="true">*</span><input name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required placeholder="8 caractères minimum" aria-describedby="user-password-help"><small id="user-password-help" class="hint">8 à 128 caractères. Transmettez-le de manière confidentielle.</small></label><label>Rôle <span class="req" aria-hidden="true">*</span><select name="role" required aria-describedby="user-role-help"><option value="tresorier">Trésorier — consulte et modifie les données</option><option value="lecteur">Lecteur — consulte uniquement</option><option value="admin">Administrateur — gère les comptes</option></select><small id="user-role-help" class="hint">Accordez uniquement les droits nécessaires.</small></label><div class="profile-photo-form"><div id="fu-photo-preview"></div><div><label>Photo de profil <span class="hint">(optionnelle)</span><input name="photoFile" type="file" accept="image/jpeg,image/png,image/webp"></label><small class="hint">JPEG, PNG ou WebP, 5 Mo maximum. La photo sera recadrée en carré.</small></div></div><button class="b">Créer le compte</button></form>
-${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row">${userAvatar(u.name, u.photo)}<strong>${esc(u.name)}</strong></div></td><td>${esc(({ admin:"Administrateur", tresorier:"Trésorier", lecteur:"Lecteur" })[u.role] || u.role)}</td><td>${u.id == ME.id ? "" : `<button class="x" data-a="delU" data-i="${u.id}">Supprimer</button>`}</td></tr>`), "")}</div>
+            return `<div class="card"><h2>Créer un compte utilisateur</h2><p class="k">Attribuez à chaque personne un compte individuel avec les droits adaptés à ses responsabilités.</p><form id="fu"><p class="field-key"><span class="req">*</span> Champ obligatoire</p><label>Nom d’utilisateur <span class="req" aria-hidden="true">*</span><input name="name" autocomplete="off" autocapitalize="none" spellcheck="false" minlength="2" maxlength="80" required placeholder="Ex. awa.diop" aria-describedby="user-name-help"><small id="user-name-help" class="hint">2 à 80 caractères ; ce nom servira aussi à la connexion.</small></label><label>Adresse e-mail <span class="req" aria-hidden="true">*</span><input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="nom@exemple.com"><small class="hint">Adresse utilisée pour se connecter et récupérer le mot de passe.</small></label><label>Mot de passe provisoire <span class="req" aria-hidden="true">*</span><input name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required placeholder="8 caractères minimum" aria-describedby="user-password-help"><small id="user-password-help" class="hint">8 à 128 caractères. Transmettez-le de manière confidentielle.</small></label><label>Rôle <span class="req" aria-hidden="true">*</span><select name="role" required aria-describedby="user-role-help"><option value="tresorier">Trésorier — consulte et modifie les données</option><option value="lecteur">Lecteur — consulte uniquement</option><option value="admin">Administrateur — gère les comptes</option></select><small id="user-role-help" class="hint">Accordez uniquement les droits nécessaires.</small></label><div class="profile-photo-form"><div id="fu-photo-preview"></div><div><label>Photo de profil <span class="hint">(optionnelle)</span><input name="photoFile" type="file" accept="image/jpeg,image/png,image/webp"></label><small class="hint">JPEG, PNG ou WebP, 5 Mo maximum. La photo sera recadrée en carré.</small></div></div><button class="b">Créer le compte</button></form>
+${tbl(["Utilisateur", "Adresse e-mail", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row">${userAvatar(u.name, u.photo)}<strong>${esc(u.name)}</strong></div></td><td><form class="user-email-form" id="user-email-${u.id}"><input type="email" name="email" autocomplete="email" maxlength="254" required value="${esc(u.email || "")}" aria-label="Adresse e-mail de ${esc(u.name)}"><button class="g" type="submit">Enregistrer</button></form></td><td>${esc(({ admin: "Administrateur", tresorier: "Trésorier", lecteur: "Lecteur" })[u.role] || u.role)}</td><td>${u.id == ME.id ? "" : `<button class="x" data-a="delU" data-i="${u.id}">Supprimer</button>`}</td></tr>`), "")}</div>
 <div class="card"><h2>Journal des modifications</h2>${tbl(["Date", "Qui", "Action", "Élément"], AUD.map(a => `<tr><td>${a.t.slice(0, 16).replace("T", " ")}</td><td>${esc(a.u)}</td><td>${esc(a.a)}</td><td>${esc(a.col + " " + a.id)}</td></tr>`), "Aucune activité.")}</div>`
         }
         const V = { dash, mem, annual, evt, pro, cai, sav, eq };
@@ -2374,7 +2536,7 @@ ${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row
             else if (f.dataset.p) { if (!v.mid) return notify("Ajoutez d’abord un membre avant d’enregistrer une vente.", "error"); S.projects.find(p => p.id == f.dataset.p).sales.push({ id: uid(), mid: v.mid, qty: +v.qty, date: v.date || today() }) }
             upd()
         });
-        let ME = null, USERS = [], AUD = [], inflight = 0, pendingProfilePhoto = null;
+        let USERS = [], AUD = [], inflight = 0, pendingProfilePhoto = null;
         const api = async (m, u, b) => { const r = await fetch(u, { method: m, headers: b ? { "Content-Type": "application/json" } : {}, body: b ? JSON.stringify(b) : undefined }); const j = await r.json().catch(() => ({})); if (!r.ok) { const e = new Error(j.error || "Erreur"); e.status = r.status; e.data = j; throw e } return j };
         const L = {};
         db = { collection: c => ({ doc: id => ({ set: d => { inflight++; return api("PUT", "/api/doc/" + c + "/" + id, d).finally(() => inflight--) }, delete: () => { inflight++; return api("DELETE", "/api/doc/" + c + "/" + id).finally(() => inflight--) } }), onSnapshot: fn => { L[c] = fn } }) };
@@ -2414,7 +2576,7 @@ ${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row
 <div class="landing-hero-actions"><a class="b" href="#connexion">${setup ? "Cr\u00e9er l\u2019acc\u00e8s administrateur" : "Acc\u00e9der \u00e0 mon espace"}</a><a class="g" href="#missions">D&eacute;couvrir la CTC</a></div>
 <div class="landing-identity">Comit&eacute; inter-universitaire &middot; Moustarchidine Junior &middot; Thi&egrave;s</div>
 </div>
-<section class="card landing-auth" id="connexion" aria-labelledby="auth-title"><div class="landing-secure"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></svg>Acc&egrave;s r&eacute;serv&eacute; aux membres autoris&eacute;s</div><h2 id="auth-title">${setup ? "Premi&egrave;re configuration" : "Connexion &agrave; votre espace"}</h2><p>${setup ? "Cr&eacute;ez le compte administrateur de la commission pour commencer." : "Connectez-vous avec le compte qui vous a &eacute;t&eacute; attribu&eacute;."}</p><form id="fa"><p class="field-key"><span class="req">*</span> Champs obligatoires${setup ? " &middot; Mot de passe de 8 &agrave; 128 caract&egrave;res." : ""}</p><label>Nom d&rsquo;utilisateur <span class="req" aria-hidden="true">*</span><input name="name" autocomplete="username" minlength="2" maxlength="80" required placeholder="Votre nom de compte"></label><label>Mot de passe <span class="req" aria-hidden="true">*</span><input name="password" type="password" required minlength="${setup ? 8 : 1}" maxlength="128" autocomplete="${setup ? "new-password" : "current-password"}" placeholder="${setup ? "8 caract&egrave;res minimum" : "Votre mot de passe"}">${setup ? '<small class="hint">Choisissez un mot de passe personnel et gardez-le confidentiel.</small>' : ""}</label>${setup ? '<div class="profile-photo-form"><div id="setup-photo-preview"></div><div><label>Photo de profil (optionnelle)<input name="photoFile" type="file" accept="image/jpeg,image/png,image/webp"></label><small class="hint">JPEG, PNG ou WebP, 5 Mo maximum.</small></div></div>' : ""}<div id="er" class="bad" role="alert"></div><button class="b">${setup ? "Cr\u00e9er le compte administrateur" : "Se connecter"}</button></form><p class="auth-help">${setup ? "Cette premi&egrave;re &eacute;tape cr&eacute;e l&rsquo;acc&egrave;s administrateur initial. Vous pourrez ensuite ajouter les comptes de l&rsquo;&eacute;quipe." : "Besoin d&rsquo;un acc&egrave;s ? Contactez l&rsquo;administrateur de la commission."}</p></section>
+<section class="card landing-auth" id="connexion" aria-labelledby="auth-title"><div class="landing-secure"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></svg>Acc&egrave;s r&eacute;serv&eacute; aux membres autoris&eacute;s</div><h2 id="auth-title">${setup ? "Premi&egrave;re configuration" : "Connexion &agrave; votre espace"}</h2><p>${setup ? "Cr&eacute;ez le compte administrateur de la commission pour commencer." : "Connectez-vous avec votre adresse e-mail ou votre nom d’utilisateur."}</p><form id="fa"><p class="field-key"><span class="req">*</span> Champs obligatoires${setup ? " &middot; Mot de passe de 8 &agrave; 128 caract&egrave;res." : ""}</p>${setup ? '<label>Nom d’utilisateur <span class="req" aria-hidden="true">*</span><input name="name" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="2" maxlength="80" required placeholder="Votre nom de compte"></label><label>Adresse e-mail <span class="req" aria-hidden="true">*</span><input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="nom@exemple.com"><small class="hint">Utilisée pour la connexion et la récupération du mot de passe.</small></label>' : '<label>Adresse e-mail ou nom d’utilisateur <span class="req" aria-hidden="true">*</span><input name="identity" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="254" required placeholder="nom@exemple.com ou votre identifiant"></label>'}<label>Mot de passe <span class="req" aria-hidden="true">*</span><input name="password" type="password" required minlength="${setup ? 8 : 1}" maxlength="128" autocomplete="${setup ? "new-password" : "current-password"}" placeholder="${setup ? "8 caract&egrave;res minimum" : "Votre mot de passe"}">${setup ? '<small class="hint">Choisissez un mot de passe personnel et gardez-le confidentiel.</small>' : ""}</label>${setup ? '<div class="profile-photo-form"><div id="setup-photo-preview"></div><div><label>Photo de profil (optionnelle)<input name="photoFile" type="file" accept="image/jpeg,image/png,image/webp"></label><small class="hint">JPEG, PNG ou WebP, 5 Mo maximum.</small></div></div>' : ""}<div id="er" class="bad" role="alert"></div><button class="b">${setup ? "Cr\u00e9er le compte administrateur" : "Se connecter"}</button></form>${setup ? "" : '<button type="button" class="g" id="show-forgot-password">Mot de passe oublié ?</button><form id="forgot-password-form" hidden><label>Adresse e-mail du compte<input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="nom@exemple.com"></label><p class="hint">Si cette adresse est associée à un compte, un lien de récupération sera envoyé.</p><div id="forgot-password-status" role="status" aria-live="polite"></div><button class="g" type="submit">Envoyer le lien</button></form>'}<p class="auth-help">${setup ? "Cette premi&egrave;re &eacute;tape cr&eacute;e l&rsquo;acc&egrave;s administrateur initial. Vous pourrez ensuite ajouter les comptes de l&rsquo;&eacute;quipe." : "Besoin d&rsquo;un acc&egrave;s ? Contactez l&rsquo;administrateur de la commission."}</p></section>
 </section>
 <section class="landing-section" id="missions" aria-labelledby="missions-title"><div class="landing-section-heading"><div class="landing-eyebrow">La CTC en bref</div><h2 id="missions-title">Une commission au service de la gestion et des membres</h2><p>Un cadre pour suivre les ressources de la section et renforcer la participation responsable de chacun.</p></div><div class="landing-mission-grid"><article class="landing-mission"><span class="landing-mission-number">01 &middot; TR&Eacute;SORERIE</span><h3>Suivre les ressources avec rigueur</h3><p>Tenir &agrave; jour les recettes, les d&eacute;penses et les op&eacute;rations afin de disposer d&rsquo;une vision claire de la caisse.</p></article><article class="landing-mission"><span class="landing-mission-number">02 &middot; PARTICIPATION</span><h3>Favoriser la transparence collective</h3><p>Organiser le suivi des participations et des cotisations, avec un historique consultable par les personnes habilit&eacute;es.</p></article><article class="landing-mission"><span class="landing-mission-number">03 &middot; CAPACITATION</span><h3>Encourager l&rsquo;autonomie des membres</h3><p>Accompagner la compr&eacute;hension des responsabilit&eacute;s et des pratiques de gestion au sein de la commission.</p></article></div></section>
 <section class="landing-section" id="services" aria-labelledby="services-title"><div class="landing-section-heading"><div class="landing-eyebrow">Les outils disponibles</div><h2 id="services-title">Un espace de gestion simple et centralis&eacute;</h2><p>Les fonctions de l&rsquo;application facilitent le suivi courant des activit&eacute;s de la CTC.</p></div><div class="landing-service-grid"><article class="landing-service"><span class="landing-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 19v-1.5a5.5 5.5 0 0 1 11 0V19zM16 5.5a3 3 0 0 1 0 5.8m2 3a4.5 4.5 0 0 1 2.5 4.1V19h-3"/></svg></span><h3>Membres</h3><p>Annuaire consultable, profils et informations d&rsquo;activit&eacute;.</p></article><article class="landing-service"><span class="landing-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 10h16m-11 4h2m3 0h2m-7 4h2"/></svg></span><h3>Participations</h3><p>Suivi annuel des versements, des paiements partiels et des soldes.</p></article><article class="landing-service"><span class="landing-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M7 15l4-4 3 2 6-7"/><path d="M16 6h4v4"/></svg></span><h3>Cotisations et ventes</h3><p>Gestion des cotisations &eacute;v&eacute;nementielles et des projets de vente.</p></article><article class="landing-service"><span class="landing-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18m-14 5h4M7 6V4h10v2"/></svg></span><h3>Caisse et rapports</h3><p>Consultation des mouvements, sauvegarde et exports de suivi.</p></article></div></section>
@@ -2424,6 +2586,47 @@ ${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row
 </div>`;
             const pageFooter = document.querySelector(".landing-footer"); if (pageFooter) document.getElementById("site-footer").replaceChildren(pageFooter);
             applyOrganizationBranding();
+            const resetToken = new URLSearchParams(location.search).get("reset");
+            if (resetToken) {
+                document.getElementById("app").innerHTML = `<section class="card landing-auth" aria-labelledby="reset-title"><h2 id="reset-title">Choisir un nouveau mot de passe</h2><p>Le nouveau mot de passe doit contenir entre 8 et 128 caractères.</p><form id="reset-password-form"><label>Nouveau mot de passe<input name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required></label><label>Confirmer le mot de passe<input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required></label><div id="reset-password-status" role="status" aria-live="polite"></div><button class="b" type="submit">Réinitialiser le mot de passe</button></form></section>`;
+                document.getElementById("site-footer").replaceChildren();
+                document.getElementById("reset-password-form").addEventListener("submit", async ev => {
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                    const form = ev.currentTarget, values = Object.fromEntries(new FormData(form)), button = form.querySelector('[type="submit"]'), status = document.getElementById("reset-password-status");
+                    if (values.password !== values.confirmPassword) { status.textContent = "Les mots de passe ne correspondent pas."; return }
+                    button.disabled = true; status.textContent = "";
+                    try {
+                        await api("POST", "/api/password/reset", { token: resetToken, password: values.password });
+                        history.replaceState(null, "", "/");
+                        loginView(false);
+                        notify("Mot de passe modifié. Connectez-vous avec votre nouveau mot de passe.")
+                    } catch (error) {
+                        status.textContent = error.message;
+                        button.disabled = false
+                    }
+                });
+                return
+            }
+            const forgotButton = document.getElementById("show-forgot-password"), forgotForm = document.getElementById("forgot-password-form");
+            if (forgotButton && forgotForm) {
+                forgotButton.addEventListener("click", () => {
+                    forgotForm.hidden = !forgotForm.hidden;
+                    if (!forgotForm.hidden) forgotForm.querySelector("input").focus()
+                });
+                forgotForm.addEventListener("submit", async ev => {
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                    const form = ev.currentTarget, button = form.querySelector('[type="submit"]'), status = document.getElementById("forgot-password-status");
+                    button.disabled = true; status.textContent = "";
+                    try {
+                        await api("POST", "/api/password/forgot", Object.fromEntries(new FormData(form)));
+                        status.textContent = "Si cette adresse est associée à un compte, un lien de récupération vient d’être envoyé."
+                    } catch (error) {
+                        status.textContent = error.message
+                    } finally { button.disabled = false }
+                })
+            }
             document.getElementById("fa").onsubmit = async ev => {
                 ev.preventDefault(); ev.stopImmediatePropagation();
                 const form = ev.target, v = Object.fromEntries(new FormData(form)), button = form.querySelector("button");
@@ -2431,7 +2634,7 @@ ${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row
                 try {
                     if (setup) v.photo = v.photoFile && v.photoFile.size ? await resizeProfilePhoto(v.photoFile) : null;
                     delete v.photoFile;
-                    await api("POST", setup ? "/api/setup" : "/api/login", v); location.reload();
+                    await api("POST", setup ? "/api/setup" : "/api/login", setup ? v : { identity: v.identity, password: v.password }); location.reload();
                 } catch (x) {
                     document.getElementById("er").textContent = x.message;
                     button.disabled = false; button.textContent = setup ? "Cr\u00e9er le compte administrateur" : "Se connecter";
@@ -2469,25 +2672,50 @@ ${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row
             notificationButton.setAttribute("aria-expanded", String(opening));
             if (opening) {
                 unreadNotifications = 0;
-                localStorage.setItem("ctc-notifications-unread", "0");
+                const keys = notificationStorageKeys();
+                if (keys) localStorage.setItem(keys.unread, "0");
                 renderNotifications()
             }
         });
         notificationClear.addEventListener("click", () => {
             unreadNotifications = 0;
-            localStorage.setItem("ctc-notifications-unread", "0");
+            const keys = notificationStorageKeys();
+            if (keys) localStorage.setItem(keys.unread, "0");
             renderNotifications()
+        });
+        document.addEventListener("click", e => {
+            const profileButton = e.target.closest("#who-profile-button");
+            const menu = document.getElementById("who-menu");
+            if (profileButton && menu) {
+                const opening = menu.hidden;
+                menu.hidden = !opening;
+                profileButton.setAttribute("aria-expanded", String(opening))
+            } else if (menu && !e.target.closest(".who-profile-wrap")) {
+                menu.hidden = true;
+                const button = document.getElementById("who-profile-button");
+                if (button) button.setAttribute("aria-expanded", "false")
+            }
         });
         document.addEventListener("click", e => {
             if (!e.target.closest(".notification-wrap")) closeNotifications()
         });
         document.addEventListener("keydown", e => {
-            if (e.key === "Escape") closeNotifications()
+            if (e.key === "Escape") {
+                closeNotifications();
+                const menu = document.getElementById("who-menu");
+                if (menu) menu.hidden = true;
+                const profileButton = document.getElementById("who-profile-button");
+                if (profileButton) profileButton.setAttribute("aria-expanded", "false")
+            }
         });
         renderNotifications();
         document.addEventListener("click", async e => {
             const b = e.target.closest("[data-a=delU]"); if (b && confirm("Supprimer ce compte ?")) { try { await api("DELETE", "/api/users/" + b.dataset.i); await loadEq(); notify("Le compte a été supprimé.") } catch (x) { notify(x.message, "error") } }
-            if (e.target.closest("#change-password")) { const form = document.getElementById("password-form"); form.reset(); document.getElementById("password-error").textContent = ""; pendingProfilePhoto = null; document.getElementById("profile-photo").value = ""; document.getElementById("profile-photo-preview").innerHTML = userAvatar(ME.name, ME.photo); document.getElementById("password-dialog").showModal() }
+            if (e.target.closest("#change-password")) {
+                const menu = document.getElementById("who-menu"); if (menu) menu.hidden = true;
+                const profileButton = document.getElementById("who-profile-button"); if (profileButton) profileButton.setAttribute("aria-expanded", "false");
+                const form = document.getElementById("password-form"); form.reset(); document.getElementById("password-error").textContent = ""; pendingProfilePhoto = null; document.getElementById("profile-photo").value = ""; document.getElementById("profile-photo-preview").innerHTML = userAvatar(ME.name, ME.photo); document.getElementById("password-dialog").showModal()
+            }
             if (e.target.closest("[data-a=closePassword]")) document.getElementById("password-dialog").close();
             if (e.target.id == "out") { try { await api("POST", "/api/logout", {}); location.reload() } catch (x) { notify(x.message, "error") } }
         });
@@ -2537,6 +2765,20 @@ ${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row
                 finally { button.disabled = false }
                 return
             }
+            if (e.target.id.startsWith("user-email-")) {
+                e.preventDefault(); e.stopImmediatePropagation();
+                const form = e.target, userId = form.id.slice("user-email-".length), button = form.querySelector('[type="submit"]');
+                button.disabled = true;
+                try {
+                    await api("PUT", `/api/users/${userId}/email`, { email: form.elements.email.value });
+                    await loadEq();
+                    notify("Adresse e-mail du compte mise à jour.")
+                } catch (error) {
+                    notify(error.message, "error");
+                    button.disabled = false
+                }
+                return
+            }
             if (e.target.id != "fu") return;
             e.preventDefault(); e.stopImmediatePropagation();
             const form = e.target, v = Object.fromEntries(new FormData(form)), button = form.querySelector("button");
@@ -2555,13 +2797,23 @@ ${tbl(["Utilisateur", "Rôle", ""], USERS.map(u => `<tr><td><div class="user-row
         function refreshWho() {
             if (!ME) return;
             const roles = { admin: "Administrateur", tresorier: "Trésorier", lecteur: "Lecteur" };
-            document.getElementById("who").innerHTML = userAvatar(ME.name, ME.photo) +
-                `<span>${esc(ME.name)} · ${roles[ME.role]}</span>` +
-                ' <button class="g" id="change-password" aria-haspopup="dialog" aria-controls="password-dialog">Mon compte</button>' +
-                ' <button class="g" id="out">Déconnexion</button>';
+            document.getElementById("who").innerHTML =
+                '<div class="who-profile-wrap">' +
+                `<button type="button" class="who-profile-button" id="who-profile-button" aria-haspopup="menu" aria-expanded="false" aria-label="Ouvrir le menu de ${esc(ME.name)}">` +
+                userAvatar(ME.name, ME.photo) +
+                `<span class="who-profile-name">${esc(ME.name)}</span>` +
+                '</button>' +
+                '<div class="who-menu" id="who-menu" role="menu" hidden>' +
+                `<button type="button" class="g" id="change-password" role="menuitem" aria-haspopup="dialog" aria-controls="password-dialog">Mon compte</button>` +
+                '<button type="button" class="g" id="out" role="menuitem">Déconnexion</button>' +
+                '</div>' +
+                '</div>';
         }
         (async () => {
             try { ME = await api("GET", "/api/me") } catch (x) { return loginView(x.data && x.data.setup) }
+            loadUserNotifications();
+            renderNotifications();
+            document.getElementById("notification-wrap").hidden = false;
             applyOrganizationBranding();
             document.getElementById("site-footer").replaceChildren();
             document.getElementById("nav").hidden = false; document.getElementById("nav").className = ""; document.getElementById("nav").setAttribute("aria-label", "Navigation principale");
